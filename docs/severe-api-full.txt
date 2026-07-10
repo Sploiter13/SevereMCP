@@ -1,0 +1,6677 @@
+# Landing
+
+Welcome to **Severe's user guide**, within the articles, we cover user installation, usage, and reference to our implementation of the **Luau**.
+
+## Product Description
+
+**Severe** is an external, being one of the first on the market **post-Hyperion**, it is a very powerful and undetected tool on **Roblox**. It has a staggering, modern visuals, a flexible aimbot, and other useful tools, as well as most importantly, a **Luau** environment, allowing those familiar with the language to further tailor their experience.
+
+## Tooling
+
+Before proceeding further, if you're here for **Luau** development, please ensure proper tooling. We recommend:
+
+* **Zed:** as a code editor, it is open-source and is blazingly fast, offering alot of extensions and settings to tailor the UI, **Visual Studio Code** can also be used.
+* **Figma:** for any graphical work, for example making a UI, we recommend using this, as it is a straight-forward tool allowing you to sketch and convert UI for **Severe**.
+
+
+# Installation
+
+## Overview
+
+> In this article, we will cover installing Severe, and the most common issues users face in the process.
+
+## Requirements
+
+* **Windows 10/11:** Note that for some newer versions of **Windows 11** might not work, you should verify in the purchase channel on the Discord server. We also don't promise tweaked re-distributions of Windows to work out of the box, few that have been tested are: **Atlas**, and **XOS**.
+* **Internet Connection**
+* **Turned off anti-virus:** both Windows Defender, and user-installed anti-viruses can interfere with **Severe**. We recommend using [**Winaero Tweaker**](https://winaerotweaker.com/) or \[**Defender Control**]\[<https://github.com/pgkt04/defender-control>]
+
+### Redistributes
+
+This is needed to be installed **before** Severe for smoother experience, and also to fix some of the problems (for example: the overlay not showing up).
+
+* [DirectX End-User Runtime](https://www.microsoft.com/en-us/download/details.aspx?id=8109)
+* [.NET SDK](https://dotnet.microsoft.com/en-us/download)
+* [Visual C++ Runtime](https://www.techpowerup.com/download/visual-c-redistributable-runtime-package-all-in-one/)
+
+## Downloading
+
+Install **severe.rar** from the `#downloads` channel on the official Discord server, afterwards continue by **extracting**, and **running the upgrade.exe** file.
+
+After, you should see a new file in the same folder as **upgrade.exe** called **software.exe**, this is your primary executable that **you should be running to launch Severe.**
+
+Run **software.exe**, and ideally, after a bit of waiting, you should see an overlay on **Roblox** asking you to either **log-in** or **register**. If you're a first time user, please continue with registering, a few key details however:
+
+* **Note down your username and password:** this is critical to ensure that your account won't get lost.
+* **Avoid special characters:** spaces, symbols should be avoided at all cost, please use an alphanumeric password consisting of letters **A-Z**, and **0-9** numbers.
+
+## Issues
+
+### HWID Mismatch
+
+We utilize **HWID** to provide a secure connection from your machine to our servers, changing a part in your PC can sometimes cause this to change. In this case, please navigate to our [Keyauth Page](https://keyauth.cc/panel/SHELUV_PERKS/v-severe) and press **"Reset HWID"**.
+
+### Executable not opening
+
+This is a frequent issue with custom file explorers, please use the native file explorer or utilize the command prompt to open the file.
+
+### Loading Loop / Bad Post Code
+
+Incase **Severe** is stuck whilst loading, the most frequent resolution is disabling your anti-virus software, such as **Malwarebytes**, or **Avast**.
+
+### GLFW Error
+
+Reopen **Severe** with **Roblox window focused**.
+
+### D3DCompiler\_43.dll
+
+Download this [file](https://www.dll-files.com/download/0c20f567e2e586f6bcf3f0ce3ae64aab/d3dcompiler_43.dll.html?c=Yko1VjlUSWd4WFJaZ2w5OG1hQjFVQT09) and move it into `C:/Windows/System32`.
+
+### HTTPs Verification Failed
+
+Use [**Cloudflare's 1.1.1.1**](https://one.one.one.one/) or a VPN.
+
+### This app can't run on your PC
+
+Disable all anti-viruses, redownload **Severe** and run **upgrade.exe**.
+
+### Hosts
+
+First, download [this file](https://pixeldrain.com/u/jWJfBB3Q), afterwards, move it to `C:/Windows/System32/Drivers/etc`.
+
+### Don't see your issue?
+
+Contact support via the official **Discord server**, and please, remain patient. In edge cases, where a new-user can't get their **Severe** working, and hasn't registered an account before, a refund can be negotiated.
+
+
+# Glossary
+
+## [Luau](https://luau.org/)
+
+(pronounced "LOO-ow") is a scripting language, derived from **Lua 5.1**, key features of it are **performance**, **type checking**, **syntax additions**, and **safety**.
+
+It's used in **Roblox** as the primary scripting language for games, as well as in **Warframe**, and **Alan Wake 2**.
+
+## [HWID](https://en.wikipedia.org/wiki/Device_fingerprint)
+
+Often used for authentication, it's a unique identifier assigned to hardware components of a computer.
+
+## [RAM](https://en.wikipedia.org/wiki/Random-access_memory)
+
+Digital, "short-term memory" in which games store live data, such as player health, position, etc.
+
+
+# Core
+
+
+# File System
+
+## dofile
+
+### Definition
+
+```luau
+function dofile(path: string): (... any)
+```
+
+### Returns
+
+<table data-header-hidden data-full-width="false"><thead><tr><th valign="middle">Type</th></tr></thead><tbody><tr><td valign="middle"><pre class="language-luau"><code class="lang-luau">(... any)
+</code></pre></td></tr></tbody></table>
+
+### Description
+
+Effectively `loadstring(readfile(path))()`. Loads and executes a luau file, returning any values the file returns.
+
+***
+
+## loadfile
+
+### Definition
+
+```luau
+function loadfile(path: string): (... any)
+```
+
+### Returns
+
+<table data-header-hidden data-full-width="false"><thead><tr><th valign="middle">Type</th></tr></thead><tbody><tr><td valign="middle"><pre class="language-luau"><code class="lang-luau">(... any)
+</code></pre></td></tr></tbody></table>
+
+### Description
+
+Loads a luau file and returns it as a function. Call the returned function to execute the file's code.
+
+***
+
+## writefile
+
+### Definition
+
+```luau
+function writefile(path: string, content: string): ()
+```
+
+### Description
+
+Overrides/creates a file at `path` with specified content.
+
+***
+
+## isfile
+
+### Definition
+
+```luau
+function isfile(path: string): boolean
+```
+
+### Returns
+
+<table data-header-hidden data-full-width="false"><thead><tr><th valign="middle">Type</th></tr></thead><tbody><tr><td valign="middle"><pre class="language-luau"><code class="lang-luau">boolean
+</code></pre></td></tr></tbody></table>
+
+### Description
+
+Validates the existence of a file at `path`, returns a boolean.
+
+***
+
+## isfolder
+
+### Definition
+
+```luau
+function isfolder(path: string): boolean
+```
+
+### Returns
+
+<table data-header-hidden data-full-width="false"><thead><tr><th valign="middle">Type</th></tr></thead><tbody><tr><td valign="middle"><pre class="language-luau"><code class="lang-luau">boolean
+</code></pre></td></tr></tbody></table>
+
+### Description
+
+Validates the existence of a folder at `path`, returns a boolean.
+
+***
+
+## readfile
+
+### Definition
+
+```luau
+function readfile(path: string): string
+```
+
+### Returns
+
+<table data-header-hidden data-full-width="false"><thead><tr><th valign="middle">Type</th></tr></thead><tbody><tr><td valign="middle"><pre class="language-luau"><code class="lang-luau">string
+</code></pre></td></tr></tbody></table>
+
+### Description
+
+Returns the contents of a file at `path` as a string.
+
+***
+
+## listfiles
+
+### Definition
+
+```luau
+function listfiles(path: string): { string }
+```
+
+### Returns
+
+<table data-header-hidden data-full-width="false"><thead><tr><th valign="middle">Type</th></tr></thead><tbody><tr><td valign="middle"><pre class="language-luau"><code class="lang-luau">{ string }
+</code></pre></td></tr></tbody></table>
+
+### Description
+
+Returns an array of all files and folders at `path`.
+
+***
+
+## makefolder
+
+### Definition
+
+```luau
+function makefolder(path: string): ()
+```
+
+### Description
+
+Creates a new folder at `path`.
+
+***
+
+## delfolder
+
+### Definition
+
+```luau
+function delfolder(path: string): ()
+```
+
+### Description
+
+Removes the folder located at `path`.
+
+***
+
+> **Note:** All file operations are sandboxed to `C:\v2\workspace`. Attempting to read/write/load outside this directory is impossible.
+
+
+# Miscellaneous
+
+## isrbxactive
+
+### Definition
+
+```luau
+function isrbxactive(): boolean
+```
+
+### Returns
+
+<table data-header-hidden data-full-width="false"><thead><tr><th valign="middle">Type</th></tr></thead><tbody><tr><td valign="middle"><pre class="language-luau"><code class="lang-luau">boolean
+</code></pre></td></tr></tbody></table>
+
+### Description
+
+Will return `true` if the currently focused window is **Roblox**, otherwise returns `false`.
+
+***
+
+## send\_notification
+
+### Definition
+
+```luau
+function send_notification(content: string): ()
+```
+
+### Parameters
+
+|   Name  |  Type  |                       Description                       |
+| :-----: | :----: | :-----------------------------------------------------: |
+| content | string | Message, that you want to be visualized on the overlay. |
+
+### Description
+
+This will visualize `content` on the screen thru an notification on the overlay.
+
+### Code Samples
+
+```luau
+send_notification 'Hello, world!'
+```
+
+***
+
+## setclipboard
+
+### Definition
+
+```luau
+function setclipboard(content: string): ()
+```
+
+### Parameters
+
+| Name    | Type   | Description                                        |
+| ------- | ------ | -------------------------------------------------- |
+| content | string | Whatever you want to be copied into the clipboard. |
+
+### Description
+
+This will essentially copy the string to your system's clipboard.
+
+### Code Samples
+
+```luau
+setclipboard 'Clipboard!'
+```
+
+***
+
+## block\_roblox\_window
+
+### Definition
+
+```luau
+function block_roblox_window(state: boolean): ()
+```
+
+### Parameters
+
+| Name  | Type    | Description                                                  |
+| ----- | ------- | ------------------------------------------------------------ |
+| state | boolean | Whether or not you're trying to block or unblock the window. |
+
+### Description
+
+Will effectively disable input pass-through on the overlay, forcing you to interact with **it** rather than the game. This is useful when creating custom a user-interface.
+
+***
+
+## pointer\_to\_userdata
+
+### Definition
+
+```luau
+function pointer_to_userdata(address: number): userdata
+```
+
+### Parameters
+
+| Name    | Type   | Description                                        |
+| ------- | ------ | -------------------------------------------------- |
+| address | number | The address that you want to turn into a userdata. |
+
+### Returns
+
+<table data-header-hidden data-full-width="false"><thead><tr><th valign="middle">Type</th></tr></thead><tbody><tr><td valign="middle"><pre class="language-luau"><code class="lang-luau">userdata
+</code></pre></td></tr></tbody></table>
+
+### Description
+
+This is a useful function that you'll find yourself utilizing when interacting with the memory functions. This will effectively turn valid addresses back into **wolurld objects**, allowing you to index/namecall them.
+
+### Code Samples
+
+```luau
+-- Find the DataModel by reading Workspace's parent offset, and then recasting it back to userdata.
+local Parent = memory.readu64(workspace, 0x50)
+local DataModel = pointer_to_userdata(Parent)
+
+print(DataModel == game) -- Ideally, would be true, however due to version changes, 0x50 might be an invalid offset.
+```
+
+***
+
+## get\_overlay\_fps
+
+### Definition
+
+```luau
+function get_overlay_fps(): number
+```
+
+### Returns
+
+<table data-header-hidden data-full-width="false"><thead><tr><th valign="middle">Type</th></tr></thead><tbody><tr><td valign="middle"><pre class="language-luau"><code class="lang-luau">number
+</code></pre></td></tr></tbody></table>
+
+### Description
+
+Returns the number amount of **FPS** (frames per second) that the overlay is currently running at.
+
+***
+
+## is\_forcefield\_check\_active
+
+### Definition
+
+```luau
+function is_forcefield_check_active(): boolean
+```
+
+### Returns
+
+<table data-header-hidden data-full-width="false"><thead><tr><th valign="middle">Type</th></tr></thead><tbody><tr><td valign="middle"><pre class="language-luau"><code class="lang-luau">boolean
+</code></pre></td></tr></tbody></table>
+
+### Description
+
+Returns a boolean (true/false) based if the player has **Forcefield Check** on in their settings.
+
+***
+
+## is\_local\_health\_check\_active
+
+### Definition
+
+```luau
+function is_local_health_check_active(): boolean
+```
+
+### Returns
+
+<table data-header-hidden data-full-width="false"><thead><tr><th valign="middle">Type</th></tr></thead><tbody><tr><td valign="middle"><pre class="language-luau"><code class="lang-luau">boolean
+</code></pre></td></tr></tbody></table>
+
+### Description
+
+Returns a boolean (true/false) based if the player has **Health Check** on in their settings.
+
+***
+
+## is\_team\_check\_active
+
+### Definition
+
+```luau
+function is_team_check_active(): boolean
+```
+
+### Returns
+
+<table data-header-hidden data-full-width="false"><thead><tr><th valign="middle">Type</th></tr></thead><tbody><tr><td valign="middle"><pre class="language-luau"><code class="lang-luau">boolean
+</code></pre></td></tr></tbody></table>
+
+### Description
+
+Returns a boolean (true/false) based if the player has **Team Check** on in their settings.
+
+***
+
+## add\_model\_data
+
+### Definition
+
+```luau
+function add_model_data(data: table, key: string): boolean
+```
+
+### Parameters
+
+| Name | Type   | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ---- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| data | table  | Character data structure with fields like `Username` (string), `Displayname` (string), `Userid` (number), `Character` (Instance), `PrimaryPart` (Instance), `Head` (Instance), `LeftLeg` (Instance), `LeftArm` (Instance), `RightLeg` (Instance), `RightArm` (Instance), `Torso` (Instance), `ToolName` (string), `TeamName` (string), `BodyHeightScale` (number), `RigType` (number), `Whitelisted` (boolean), `Archenemies` (boolean), `Aimbot_Part` (Instance), `Aimbot_TP_Part` (Instance), `Triggerbot_Part` (Instance), `Health` (number), `MaxHealth` (number), `body_parts_data` (table), `full_body_data` (table). |
+| key  | string | Unique identifier for storing the model data.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+
+### Returns
+
+<table data-header-hidden data-full-width="false"><thead><tr><th valign="middle">Type</th></tr></thead><tbody><tr><td valign="middle"><pre class="language-luau"><code class="lang-luau">boolean
+</code></pre></td></tr></tbody></table>
+
+### Description
+
+Declares a new character model data under the given key for use in targeting and ESP. Processed in a dedicated model thread, and will return `true` on success.
+
+### Code Samples
+
+```luau
+local data = {
+    Username = "Player1",
+    Displayname = "CoolPlayer",
+    Userid = 123456,
+    Character = workspace.Player1.Character,
+    PrimaryPart = workspace.Player1.Character.HumanoidRootPart,
+    -- ... other fields
+}
+add_model_data(data, "player1_key")
+```
+
+***
+
+## edit\_model\_data
+
+### Definition
+
+```luau
+function edit_model_data(data: table, key: string): boolean
+```
+
+### Parameters
+
+| Name | Type   | Description                                                                                                                                                                                                                                                      |
+| ---- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| data | table  | Partial updates with fields like `RigType` (number), `Whitelisted` (boolean), `Archenemies` (boolean), `Aimbot_Part` (Instance), `Aimbot_TP_Part` (Instance), `Triggerbot_Part` (Instance), `Health` (number), `MaxHealth` (number), `BodyHeightScale` (number). |
+| key  | string | Key of existing model data to update.                                                                                                                                                                                                                            |
+
+### Returns
+
+<table data-header-hidden data-full-width="false"><thead><tr><th valign="middle">Type</th></tr></thead><tbody><tr><td valign="middle"><pre class="language-luau"><code class="lang-luau">boolean
+</code></pre></td></tr></tbody></table>
+
+### Description
+
+Updates specific fields in existing model data stored under the key. Efficient for runtime changes like health or target parts. Returns `true` on success.
+
+### Code Samples
+
+```luau
+local edit = {
+    Health = 50,
+    Aimbot_Part = workspace.Player1.Character.Head
+}
+edit_model_data(edit, "player1_key")
+```
+
+***
+
+## remove\_model\_data
+
+### Definition
+
+```luau
+function remove_model_data(key: string): boolean
+```
+
+### Parameters
+
+| Name | Type   | Description                      |
+| ---- | ------ | -------------------------------- |
+| key  | string | Key of the model data to remove. |
+
+### Returns
+
+<table data-header-hidden data-full-width="false"><thead><tr><th valign="middle">Type</th></tr></thead><tbody><tr><td valign="middle"><pre class="language-luau"><code class="lang-luau">boolean
+</code></pre></td></tr></tbody></table>
+
+### Description
+
+Deletes specific model data by key. Returns `true` on success.
+
+***
+
+## clear\_model\_data
+
+### Definition
+
+```luau
+function clear_model_data(): boolean
+```
+
+### Returns
+
+<table data-header-hidden data-full-width="false"><thead><tr><th valign="middle">Type</th></tr></thead><tbody><tr><td valign="middle"><pre class="language-luau"><code class="lang-luau">boolean
+</code></pre></td></tr></tbody></table>
+
+### Description
+
+Removes all stored model data. Returns `true` on success.
+
+***
+
+## override\_local\_data
+
+### Definition
+
+```luau
+function override_local_data(data: table): boolean
+```
+
+### Parameters
+
+| Name | Type  | Description                                                                                                                                                                                                                                                                                                                                                              |
+| ---- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| data | table | Local player data with fields like `LocalPlayer` (userdata), `Displayname` (string), `Username` (string), `Userid` (number), `Character` (userdata), `Team` (userdata), `RootPart` (userdata), `LeftFoot` (userdata), `Head` (userdata), `LowerTorso` (userdata), `Tool` (userdata), `Humanoid` (userdata), `Health` (number), `MaxHealth` (number), `RigType` (number). |
+
+### Returns
+
+<table data-header-hidden data-full-width="false"><thead><tr><th valign="middle">Type</th></tr></thead><tbody><tr><td valign="middle"><pre class="language-luau"><code class="lang-luau">boolean
+</code></pre></td></tr></tbody></table>
+
+### Description
+
+Sets or overrides local player data for UI rendering and local thread processing. Returns `true` on success.
+
+### Code Samples
+
+```luau
+local data = {
+    LocalPlayer = game.Players.LocalPlayer,
+    Character = game.Players.LocalPlayer.Character,
+    -- ... other fields
+}
+override_local_data(data)
+```
+
+***
+
+## clear\_local\_data
+
+### Definition
+
+```luau
+function clear_local_data(): boolean
+```
+
+### Returns
+
+<table data-header-hidden data-full-width="false"><thead><tr><th valign="middle">Type</th></tr></thead><tbody><tr><td valign="middle"><pre class="language-luau"><code class="lang-luau">boolean
+</code></pre></td></tr></tbody></table>
+
+### Description
+
+Clears all local player data. Returns `true` on success.
+
+## ismenuopened
+
+### Definition
+
+```luau
+function ismenuopened(): boolean
+```
+
+### Returns
+
+<table data-header-hidden data-full-width="false"><thead><tr><th valign="middle">Type</th></tr></thead><tbody><tr><td valign="middle"><pre class="language-luau"><code class="lang-luau">boolean
+</code></pre></td></tr></tbody></table>
+
+### Description
+
+Whether the menu is opened returns `true`, otherwise `false`.
+
+
+# Input
+
+## keypress
+
+### Definition
+
+```luau
+function keypress(keycode: number): ()
+```
+
+### Parameters
+
+| Name    | Type   | Description              |
+| ------- | ------ | ------------------------ |
+| keycode | number | Virtual keycode to press |
+
+### Description
+
+Simulates a key press for the given virtual keycode.
+
+> **Note:** Virtual key codes: [Microsoft Docs](https://docs.microsoft.com/en-us/windows/desktop/inputdev/virtual-key-codes)
+
+***
+
+## keyrelease
+
+### Definition
+
+```luau
+function keyrelease(keycode: number): ()
+```
+
+### Parameters
+
+| Name    | Type   | Description                |
+| ------- | ------ | -------------------------- |
+| keycode | number | Virtual keycode to release |
+
+### Description
+
+Simulates a key release for the given virtual keycode.
+
+***
+
+## getpressedkey
+
+### Definition
+
+```luau
+function getpressedkey(): string
+```
+
+### Returns
+
+```horizontal
+### string
+```
+
+### Description
+
+Returns the name of the last pressed key.
+
+***
+
+## getpressedkeys
+
+### Definition
+
+```luau
+function getpressedkeys(): { string }
+```
+
+### Returns
+
+```horizontal
+### { string }
+```
+
+### Description
+
+Returns an array of currently pressed key names.
+
+***
+
+## isleftclicked
+
+### Definition
+
+```luau
+function isleftclicked(): boolean
+```
+
+### Returns
+
+```horizontal
+### boolean
+```
+
+### Description
+
+Returns `true` if left mouse button was clicked.
+
+***
+
+## isrightclicked
+
+### Definition
+
+```luau
+function isrightclicked(): boolean
+```
+
+### Returns
+
+```horizontal
+### boolean
+```
+
+### Description
+
+Returns `true` if right mouse button was clicked.
+
+***
+
+## isleftpressed
+
+### Definition
+
+```luau
+function isleftpressed(): boolean
+```
+
+### Returns
+
+```horizontal
+### boolean
+```
+
+### Description
+
+Returns `true` if left mouse button is held down.
+
+***
+
+## isrightpressed
+
+### Definition
+
+```luau
+function isrightpressed(): boolean
+```
+
+### Returns
+
+```horizontal
+### boolean
+```
+
+### Description
+
+Returns `true` if right mouse button is held down.
+
+***
+
+## mousemoverel
+
+### Definition
+
+```luau
+function mousemoverel(x: number, y: number): ()
+```
+
+### Parameters
+
+| Name | Type   | Description       |
+| ---- | ------ | ----------------- |
+| x    | number | Relative X offset |
+| y    | number | Relative Y offset |
+
+### Description
+
+Moves mouse by relative X/Y coordinates.
+
+***
+
+## mousemoveabs
+
+### Definition
+
+```luau
+function mousemoveabs(x: number, y: number): ()
+```
+
+### Parameters
+
+| Name | Type   | Description         |
+| ---- | ------ | ------------------- |
+| x    | number | Absolute X position |
+| y    | number | Absolute Y position |
+
+### Description
+
+Moves mouse to absolute X/Y screen coordinates.
+
+***
+
+## mousescroll
+
+### Definition
+
+```luau
+function mousescroll(pixels: number): ()
+```
+
+### Parameters
+
+| Name   | Type   | Description              |
+| ------ | ------ | ------------------------ |
+| pixels | number | Scroll distance (pixels) |
+
+### Description
+
+Scrolls mouse wheel by specified pixels.
+
+***
+
+## mouse1click
+
+### Definition
+
+```luau
+function mouse1click(): ()
+```
+
+### Description
+
+Simulates a left mouse button click.
+
+***
+
+## mouse1press
+
+### Definition
+
+```luau
+function mouse1press(): ()
+```
+
+### Description
+
+Simulates a left mouse button press (hold).
+
+***
+
+## mouse1release
+
+### Definition
+
+```luau
+function mouse1release(): ()
+```
+
+### Description
+
+Simulates a left mouse button release.
+
+***
+
+## mouse2click
+
+### Definition
+
+```luau
+function mouse2click(): ()
+```
+
+### Description
+
+Simulates a right mouse button click.
+
+***
+
+## mouse2press
+
+### Definition
+
+```luau
+function mouse2press(): ()
+```
+
+### Description
+
+Simulates a right mouse button press (hold).
+
+***
+
+## mouse2release
+
+### Definition
+
+```luau
+function mouse2release(): ()
+```
+
+### Description
+
+Simulates a right mouse button release.
+
+
+# Classes
+
+
+# Vector3
+
+A 3D vector with X, Y, and Z components.
+
+## Constructors
+
+### Vector3.new
+
+### Definition
+
+```luau
+function Vector3.new(x: number, y: number, z: number): Vector3
+function Vector3.new(): Vector3
+```
+
+### Parameters
+
+| Name | Type   | Description     |
+| ---- | ------ | --------------- |
+| x    | number | The X component |
+| y    | number | The Y component |
+| z    | number | The Z component |
+
+### Returns
+
+| Type    |
+| ------- |
+| Vector3 |
+
+### Description
+
+Creates a new Vector3. If no parameters are provided, creates a zero vector (0, 0, 0).
+
+### Code Samples
+
+```luau
+-- Create a vector
+local vec = Vector3.new(10, 20, 30)
+
+-- Zero vector
+local zero = Vector3.new()
+print(zero) -- Vector3(0, 0, 0)
+
+-- Unit vectors
+local right = Vector3.new(1, 0, 0)
+local up = Vector3.new(0, 1, 0)
+local forward = Vector3.new(0, 0, 1)
+```
+
+***
+
+## Properties
+
+### X
+
+```luau
+Vector3.X: number
+```
+
+The X component of the vector.
+
+***
+
+### Y
+
+```luau
+Vector3.Y: number
+```
+
+The Y component of the vector.
+
+***
+
+### Z
+
+```luau
+Vector3.Z: number
+```
+
+The Z component of the vector.
+
+***
+
+### Magnitude
+
+```luau
+Vector3.Magnitude: number
+```
+
+The length of the vector.
+
+***
+
+### Unit
+
+```luau
+Vector3.Unit: Vector3
+```
+
+A normalized version of the vector (length of 1).
+
+***
+
+## Methods
+
+### Dot
+
+### Definition
+
+```luau
+function Vector3:Dot(other: Vector3): number
+```
+
+### Parameters
+
+| Name  | Type    | Description      |
+| ----- | ------- | ---------------- |
+| other | Vector3 | The other vector |
+
+### Returns
+
+| Type   |
+| ------ |
+| number |
+
+### Description
+
+Returns the dot product of this vector and another vector.
+
+***
+
+### Cross
+
+### Definition
+
+```luau
+function Vector3:Cross(other: Vector3): Vector3
+```
+
+### Parameters
+
+| Name  | Type    | Description      |
+| ----- | ------- | ---------------- |
+| other | Vector3 | The other vector |
+
+### Returns
+
+| Type    |
+| ------- |
+| Vector3 |
+
+### Description
+
+Returns the cross product of this vector and another vector.
+
+***
+
+### Lerp
+
+### Definition
+
+```luau
+function Vector3:Lerp(goal: Vector3, alpha: number): Vector3
+```
+
+### Parameters
+
+| Name  | Type    | Description                              |
+| ----- | ------- | ---------------------------------------- |
+| goal  | Vector3 | The target vector to interpolate towards |
+| alpha | number  | The interpolation factor (0 to 1)        |
+
+### Returns
+
+| Type    |
+| ------- |
+| Vector3 |
+
+### Description
+
+Returns a Vector3 interpolated between this vector and the goal vector by the alpha amount.
+
+***
+
+## Metatables
+
+### \_\_add
+
+Adds two vectors.
+
+```luau
+local v1 = Vector3.new(1, 2, 3)
+local v2 = Vector3.new(4, 5, 6)
+local result = v1 + v2 -- Vector3(5, 7, 9)
+```
+
+***
+
+### \_\_sub
+
+Subtracts one vector from another.
+
+```luau
+local v1 = Vector3.new(5, 7, 9)
+local v2 = Vector3.new(1, 2, 3)
+local result = v1 - v2 -- Vector3(4, 5, 6)
+```
+
+***
+
+### \_\_mul
+
+Multiplies a vector by a scalar or another vector.
+
+```luau
+local vec = Vector3.new(1, 2, 3)
+local scaled = vec * 2 -- Vector3(2, 4, 6)
+
+-- Component-wise multiplication
+local v1 = Vector3.new(2, 3, 4)
+local v2 = Vector3.new(1, 2, 3)
+local result = v1 * v2 -- Vector3(2, 6, 12)
+```
+
+***
+
+### \_\_div
+
+Divides a vector by a scalar or another vector.
+
+```luau
+local vec = Vector3.new(10, 20, 30)
+local scaled = vec / 2 -- Vector3(5, 10, 15)
+
+-- Component-wise division
+local v1 = Vector3.new(10, 20, 30)
+local v2 = Vector3.new(2, 4, 5)
+local result = v1 / v2 -- Vector3(5, 5, 6)
+```
+
+***
+
+### \_\_unm
+
+Negates a vector.
+
+```luau
+local vec = Vector3.new(1, 2, 3)
+local negated = -vec -- Vector3(-1, -2, -3)
+```
+
+***
+
+### \_\_eq
+
+Compares two vectors for equality.
+
+```luau
+local v1 = Vector3.new(1, 2, 3)
+local v2 = Vector3.new(1, 2, 3)
+local v3 = Vector3.new(4, 5, 6)
+
+print(v1 == v2) -- true
+print(v1 == v3) -- false
+```
+
+***
+
+### \_\_tostring
+
+Returns a string representation of the vector.
+
+```luau
+local vec = Vector3.new(10, 20, 30)
+print(vec) -- "Vector3(10, 20, 30)"
+```
+
+
+# Color3
+
+A data type representing a color with red, green, and blue components.
+
+## Constructors
+
+### Color3.new
+
+### Definition
+
+```luau
+function Color3.new(r: number, g: number, b: number): Color3
+```
+
+### Parameters
+
+| Name | Type   | Description              |
+| ---- | ------ | ------------------------ |
+| r    | number | Red component (0 to 1)   |
+| g    | number | Green component (0 to 1) |
+| b    | number | Blue component (0 to 1)  |
+
+### Returns
+
+| Type   |
+| ------ |
+| Color3 |
+
+### Description
+
+Creates a new Color3 from RGB values in the range 0 to 1.
+
+### Code Samples
+
+```luau
+-- Pure red
+local red = Color3.new(1, 0, 0)
+
+-- Pure green
+local green = Color3.new(0, 1, 0)
+
+-- Pure blue
+local blue = Color3.new(0, 0, 1)
+
+-- White
+local white = Color3.new(1, 1, 1)
+
+-- Gray (50%)
+local gray = Color3.new(0.5, 0.5, 0.5)
+```
+
+***
+
+### Color3.fromRGB
+
+### Definition
+
+```luau
+function Color3.fromRGB(r: number, g: number, b: number): Color3
+```
+
+### Parameters
+
+| Name | Type   | Description                |
+| ---- | ------ | -------------------------- |
+| r    | number | Red component (0 to 255)   |
+| g    | number | Green component (0 to 255) |
+| b    | number | Blue component (0 to 255)  |
+
+### Returns
+
+| Type   |
+| ------ |
+| Color3 |
+
+### Description
+
+Creates a new Color3 from RGB values in the range 0 to 255.
+
+### Code Samples
+
+```luau
+-- Pure red
+local red = Color3.fromRGB(255, 0, 0)
+
+-- Orange
+local orange = Color3.fromRGB(255, 165, 0)
+
+-- Sky blue
+local skyBlue = Color3.fromRGB(135, 206, 235)
+```
+
+***
+
+### Color3.fromHSV
+
+### Definition
+
+```luau
+function Color3.fromHSV(h: number, s: number, v: number): Color3
+```
+
+### Parameters
+
+| Name | Type   | Description                         |
+| ---- | ------ | ----------------------------------- |
+| h    | number | Hue component (0 to 1)              |
+| s    | number | Saturation component (0 to 1)       |
+| v    | number | Value/brightness component (0 to 1) |
+
+### Returns
+
+| Type   |
+| ------ |
+| Color3 |
+
+### Description
+
+Creates a new Color3 from HSV (Hue, Saturation, Value) color space values.
+
+### Code Samples
+
+```luau
+-- Pure red (hue = 0)
+local red = Color3.fromHSV(0, 1, 1)
+
+-- Pure green (hue = 1/3)
+local green = Color3.fromHSV(1/3, 1, 1)
+
+-- Pure blue (hue = 2/3)
+local blue = Color3.fromHSV(2/3, 1, 1)
+
+-- Desaturated red (pink)
+local pink = Color3.fromHSV(0, 0.5, 1)
+```
+
+***
+
+### Color3.fromHex
+
+### Definition
+
+```luau
+function Color3.fromHex(hex: string): Color3
+```
+
+### Parameters
+
+| Name | Type   | Description                                |
+| ---- | ------ | ------------------------------------------ |
+| hex  | string | Hexadecimal color string (e.g., "#FF5733") |
+
+### Returns
+
+| Type   |
+| ------ |
+| Color3 |
+
+### Description
+
+Creates a new Color3 from a hexadecimal color string. The string can optionally start with "#".
+
+### Code Samples
+
+```luau
+-- With hash
+local orange = Color3.fromHex("#FF5733")
+
+-- Without hash
+local blue = Color3.fromHex("0000FF")
+
+-- Cyan
+local cyan = Color3.fromHex("#00FFFF")
+```
+
+***
+
+## Methods
+
+### ToHSV
+
+### Definition
+
+```luau
+function Color3:ToHSV(): (number, number, number)
+```
+
+### Returns
+
+| Type                     |
+| ------------------------ |
+| (number, number, number) |
+
+### Description
+
+Converts the Color3 to HSV (Hue, Saturation, Value) format and returns the three components.
+
+### Code Samples
+
+```luau
+local color = Color3.fromRGB(255, 128, 0)
+local h, s, v = color:ToHSV()
+print(h, s, v)
+```
+
+***
+
+### Lerp
+
+### Definition
+
+```luau
+function Color3:Lerp(goal: Color3, alpha: number): Color3
+```
+
+### Parameters
+
+| Name  | Type   | Description                             |
+| ----- | ------ | --------------------------------------- |
+| goal  | Color3 | The target color to interpolate towards |
+| alpha | number | The interpolation factor (0 to 1)       |
+
+### Returns
+
+| Type   |
+| ------ |
+| Color3 |
+
+### Description
+
+Returns a Color3 interpolated between this color and the goal color by the alpha amount.
+
+### Code Samples
+
+```luau
+local red = Color3.fromRGB(255, 0, 0)
+local blue = Color3.fromRGB(0, 0, 255)
+local purple = red:Lerp(blue, 0.5)
+```
+
+***
+
+## Metatables
+
+### \_\_index
+
+Allows property access on Color3 values.
+
+```luau
+local color = Color3.fromRGB(255, 128, 64)
+local r = color.R -- 1
+local g = color.G -- 0.502
+local b = color.B -- 0.251
+```
+
+***
+
+### \_\_tostring
+
+Returns a string representation of the Color3.
+
+```luau
+local color = Color3.fromRGB(255, 128, 0)
+print(color) -- "Color3(1, 0.502, 0)"
+```
+
+***
+
+### \_\_eq
+
+Compares two Color3 values for equality.
+
+```luau
+local color1 = Color3.fromRGB(255, 0, 0)
+local color2 = Color3.fromRGB(255, 0, 0)
+local color3 = Color3.fromRGB(0, 255, 0)
+
+print(color1 == color2) -- true
+print(color1 == color3) -- false
+```
+
+***
+
+### \_\_type
+
+Returns the type name "Color3".
+
+```luau
+local color = Color3.new(1, 0, 0)
+print(typeof(color)) -- "Color3"
+```
+
+***
+
+## Properties
+
+### R
+
+```luau
+Color3.R: number
+```
+
+The red component of the color (0 to 1).
+
+***
+
+### G
+
+```luau
+Color3.G: number
+```
+
+The green component of the color (0 to 1).
+
+***
+
+### B
+
+```luau
+Color3.B: number
+```
+
+The blue component of the color (0 to 1).
+
+
+# WebsocketClient
+
+A websocket client for establishing and managing WebSocket connections.
+
+## Constructors
+
+### WebsocketClient.new
+
+### Definition
+
+```luau
+function WebsocketClient.new(url: string): WebsocketClient
+```
+
+### Parameters
+
+| Name | Type   | Description                  |
+| ---- | ------ | ---------------------------- |
+| url  | string | The WebSocket connection URL |
+
+### Returns
+
+| Type            |
+| --------------- |
+| WebsocketClient |
+
+### Description
+
+Creates a new WebsocketClient and connects to the specified URL.
+
+### Code Samples
+
+```luau
+-- Create a WebSocket connection
+local ws = WebsocketClient.new("ws://example.com:8080")
+
+-- Handle incoming messages
+ws.DataReceived:Connect(function(payload, isBinary)
+    if isBinary then
+        print("Received binary data:", #payload, "bytes")
+    else
+        print("Received text:", payload)
+    end
+end)
+
+-- Send a message
+ws:Send("Hello, server!")
+
+-- Disconnect when done
+ws:Disconnect()
+```
+
+***
+
+## Properties
+
+### Url
+
+```luau
+WebsocketClient.Url: string [readonly]
+```
+
+The WebSocket connection URL that this client is connected to. This property is read-only.
+
+***
+
+## Methods
+
+### Disconnect
+
+### Definition
+
+```luau
+function WebsocketClient:Disconnect(): ()
+```
+
+### Description
+
+Disconnects the WebSocket. Yields until the client is fully disconnected. After calling this method, the WebSocket connection is closed and no further messages can be sent or received.
+
+### Code Samples
+
+```luau
+local ws = WebsocketClient.new("ws://example.com:8080")
+
+-- Do some work...
+ws:Send("Goodbye")
+
+-- Disconnect (yields until fully disconnected)
+ws:Disconnect()
+print("WebSocket disconnected")
+```
+
+***
+
+### Send
+
+### Definition
+
+```luau
+function WebsocketClient:Send(message: string, isBinary: boolean?): ()
+```
+
+### Parameters
+
+| Name     | Type     | Description                                        |
+| -------- | -------- | -------------------------------------------------- |
+| message  | string   | The message payload to send                        |
+| isBinary | boolean? | Whether to send as binary data (defaults to false) |
+
+### Description
+
+Sends a message through the WebSocket connection. The message can be sent as either text or binary data based on the `isBinary` parameter.
+
+### Code Samples
+
+```luau
+local ws = WebsocketClient.new("ws://example.com:8080")
+
+-- Send text message (default)
+ws:Send("Hello, world!")
+
+-- Explicitly send text
+ws:Send("Text message", false)
+
+-- Send binary data
+local binaryData = "\x01\x02\x03\x04"
+ws:Send(binaryData, true)
+```
+
+***
+
+## Events
+
+### DataReceived
+
+### Definition
+
+```luau
+WebsocketClient.DataReceived: Signal<(payload: string, isBinary: boolean) -> ()>
+```
+
+### Parameters
+
+| Name     | Type    | Description                         |
+| -------- | ------- | ----------------------------------- |
+| payload  | string  | The received message data           |
+| isBinary | boolean | Whether the received data is binary |
+
+### Description
+
+Fires when data is received from the WebSocket connection. The event provides the payload as a string and a boolean indicating whether it's binary data.
+
+### Code Samples
+
+```luau
+local ws = WebsocketClient.new("ws://example.com:8080")
+
+-- Connect to the DataReceived event
+ws.DataReceived:Connect(function(payload, isBinary)
+    if isBinary then
+        print("Received binary payload of length:", #payload)
+        -- Process binary data...
+    else
+        print("Received text message:", payload)
+        -- Process text data...
+    end
+end)
+
+-- Example with JSON parsing
+ws.DataReceived:Connect(function(payload, isBinary)
+    if not isBinary then
+        local success, data = pcall(function()
+            return game:GetService("HttpService"):JSONDecode(payload)
+        end)
+        
+        if success then
+            print("Received JSON data:", data)
+        else
+            print("Received non-JSON text:", payload)
+        end
+    end
+end)
+```
+
+
+# Signal
+
+
+# CFrame
+
+A coordinate frame representing position and rotation in 3D space.
+
+## Constructors
+
+### CFrame.new
+
+### Definition
+
+```luau
+function CFrame.new(): CFrame
+function CFrame.new(x: number, y: number, z: number): CFrame
+function CFrame.new(position: Vector3): CFrame
+function CFrame.new(position: Vector3, lookAt: Vector3): CFrame
+function CFrame.new(x: number, y: number, z: number, qx: number, qy: number, qz: number, qw: number): CFrame
+function CFrame.new(x: number, y: number, z: number, R00: number, R01: number, R02: number, R10: number, R11: number, R12: number, R20: number, R21: number, R22: number): CFrame
+```
+
+### Description
+
+Creates a new CFrame. Can be constructed in several ways:
+
+* Empty constructor creates an identity CFrame at (0, 0, 0)
+* Position-only creates a CFrame at the specified position with no rotation
+* Position and lookAt creates a CFrame positioned at the first argument, looking at the second
+* Position with quaternion values for rotation
+* Position with full rotation matrix components
+
+### Code Samples
+
+```luau
+-- Identity CFrame
+local cf1 = CFrame.new()
+
+-- Position only
+local cf2 = CFrame.new(10, 20, 30)
+
+-- Position from Vector3
+local cf3 = CFrame.new(Vector3.new(5, 10, 15))
+
+-- Position looking at another position
+local cf4 = CFrame.new(Vector3.new(0, 5, 0), Vector3.new(10, 5, 10))
+```
+
+***
+
+### CFrame.fromEulerAnglesXYZ
+
+### Definition
+
+```luau
+function CFrame.fromEulerAnglesXYZ(rx: number, ry: number, rz: number): CFrame
+function CFrame.fromEulerAnglesXYZ(rotation: Vector3): CFrame
+```
+
+### Parameters
+
+| Name     | Type    | Description                       |
+| -------- | ------- | --------------------------------- |
+| rx       | number  | Rotation around X-axis in radians |
+| ry       | number  | Rotation around Y-axis in radians |
+| rz       | number  | Rotation around Z-axis in radians |
+| rotation | Vector3 | Vector containing rotation angles |
+
+### Returns
+
+| Type   |
+| ------ |
+| CFrame |
+
+### Description
+
+Creates a rotated CFrame using Euler angles in X, Y, Z order (roll, pitch, yaw).
+
+### Code Samples
+
+```luau
+-- Rotate 90 degrees (π/2 radians) around Y-axis
+local cf = CFrame.fromEulerAnglesXYZ(0, math.pi/2, 0)
+
+-- Using Vector3
+local rotation = Vector3.new(0, math.pi/2, 0)
+local cf2 = CFrame.fromEulerAnglesXYZ(rotation)
+```
+
+***
+
+### CFrame.fromEulerAnglesYXZ
+
+### Definition
+
+```luau
+function CFrame.fromEulerAnglesYXZ(rx: number, ry: number, rz: number): CFrame
+function CFrame.fromEulerAnglesYXZ(rotation: Vector3): CFrame
+```
+
+### Parameters
+
+| Name     | Type    | Description                       |
+| -------- | ------- | --------------------------------- |
+| rx       | number  | Rotation around X-axis in radians |
+| ry       | number  | Rotation around Y-axis in radians |
+| rz       | number  | Rotation around Z-axis in radians |
+| rotation | Vector3 | Vector containing rotation angles |
+
+### Returns
+
+| Type   |
+| ------ |
+| CFrame |
+
+### Description
+
+Creates a rotated CFrame using Euler angles in Y, X, Z order.
+
+***
+
+### CFrame.fromOrientation
+
+### Definition
+
+```luau
+function CFrame.fromOrientation(rx: number, ry: number, rz: number): CFrame
+```
+
+### Parameters
+
+| Name | Type   | Description                       |
+| ---- | ------ | --------------------------------- |
+| rx   | number | Rotation around X-axis in radians |
+| ry   | number | Rotation around Y-axis in radians |
+| rz   | number | Rotation around Z-axis in radians |
+
+### Returns
+
+| Type   |
+| ------ |
+| CFrame |
+
+### Description
+
+Creates a rotated CFrame from orientation angles (equivalent to fromEulerAnglesYXZ).
+
+***
+
+### CFrame.fromAxisAngle
+
+### Definition
+
+```luau
+function CFrame.fromAxisAngle(axis: Vector3, rotation: number): CFrame
+```
+
+### Parameters
+
+| Name     | Type    | Description                        |
+| -------- | ------- | ---------------------------------- |
+| axis     | Vector3 | The axis of rotation (unit vector) |
+| rotation | number  | The angle of rotation in radians   |
+
+### Returns
+
+| Type   |
+| ------ |
+| CFrame |
+
+### Description
+
+Creates a CFrame rotated around the specified axis by the given angle.
+
+### Code Samples
+
+```luau
+-- Rotate 45 degrees around the Y-axis
+local axis = Vector3.new(0, 1, 0)
+local cf = CFrame.fromAxisAngle(axis, math.pi/4)
+```
+
+***
+
+### CFrame.fromMatrix
+
+### Definition
+
+```luau
+function CFrame.fromMatrix(position: Vector3, vX: Vector3, vY: Vector3, vZ: Vector3): CFrame
+```
+
+### Parameters
+
+| Name     | Type    | Description                |
+| -------- | ------- | -------------------------- |
+| position | Vector3 | The position of the CFrame |
+| vX       | Vector3 | The right vector           |
+| vY       | Vector3 | The up vector              |
+| vZ       | Vector3 | The negative look vector   |
+
+### Returns
+
+| Type   |
+| ------ |
+| CFrame |
+
+### Description
+
+Creates a CFrame from a position and three directional vectors representing the rotation matrix.
+
+***
+
+### CFrame.lookAt
+
+### Definition
+
+```luau
+function CFrame.lookAt(from: Vector3, to: Vector3, up: Vector3?): CFrame
+```
+
+### Parameters
+
+| Name | Type     | Description                               |
+| ---- | -------- | ----------------------------------------- |
+| from | Vector3  | The position to look from                 |
+| to   | Vector3  | The position to look at                   |
+| up   | Vector3? | Optional up vector (defaults to world up) |
+
+### Returns
+
+| Type   |
+| ------ |
+| CFrame |
+
+### Description
+
+Creates a CFrame positioned at 'from' and oriented to look at 'to'.
+
+### Code Samples
+
+```luau
+-- Create a CFrame looking from origin to a point
+local cf = CFrame.lookAt(Vector3.new(0, 5, 0), Vector3.new(10, 5, 10))
+
+-- With custom up vector
+local cf2 = CFrame.lookAt(Vector3.new(0, 0, 0), Vector3.new(5, 5, 5), Vector3.new(0, 1, 0))
+```
+
+***
+
+### CFrame.Angles
+
+### Definition
+
+```luau
+function CFrame.Angles(rx: number, ry: number, rz: number): CFrame
+```
+
+### Parameters
+
+| Name | Type   | Description                       |
+| ---- | ------ | --------------------------------- |
+| rx   | number | Rotation around X-axis in radians |
+| ry   | number | Rotation around Y-axis in radians |
+| rz   | number | Rotation around Z-axis in radians |
+
+### Returns
+
+| Type   |
+| ------ |
+| CFrame |
+
+### Description
+
+Creates a rotated CFrame from Euler angles (equivalent to fromOrientation).
+
+***
+
+## Methods
+
+### Inverse
+
+### Definition
+
+```luau
+function CFrame:Inverse(): CFrame
+```
+
+### Returns
+
+| Type   |
+| ------ |
+| CFrame |
+
+### Description
+
+Returns the inverse of this CFrame. When multiplied with the original, produces an identity CFrame.
+
+### Code Samples
+
+```luau
+local cf = CFrame.new(10, 20, 30)
+local inverse = cf:Inverse()
+local identity = cf * inverse -- Results in CFrame at origin
+```
+
+***
+
+### Lerp
+
+### Definition
+
+```luau
+function CFrame:Lerp(goal: CFrame, alpha: number): CFrame
+```
+
+### Parameters
+
+| Name  | Type   | Description                              |
+| ----- | ------ | ---------------------------------------- |
+| goal  | CFrame | The target CFrame to interpolate towards |
+| alpha | number | The interpolation factor (0 to 1)        |
+
+### Returns
+
+| Type   |
+| ------ |
+| CFrame |
+
+### Description
+
+Returns a CFrame interpolated between this CFrame and the goal CFrame by the alpha amount.
+
+### Code Samples
+
+```luau
+local start = CFrame.new(0, 0, 0)
+local goal = CFrame.new(10, 10, 10)
+local halfway = start:Lerp(goal, 0.5) -- CFrame at (5, 5, 5)
+```
+
+***
+
+### ToWorldSpace
+
+### Definition
+
+```luau
+function CFrame:ToWorldSpace(cf: CFrame): CFrame
+```
+
+### Parameters
+
+| Name | Type   | Description                |
+| ---- | ------ | -------------------------- |
+| cf   | CFrame | The CFrame in object space |
+
+### Returns
+
+| Type   |
+| ------ |
+| CFrame |
+
+### Description
+
+Transforms a CFrame from object space to world space. Equivalent to `self * cf`.
+
+***
+
+### ToObjectSpace
+
+### Definition
+
+```luau
+function CFrame:ToObjectSpace(cf: CFrame): CFrame
+```
+
+### Parameters
+
+| Name | Type   | Description               |
+| ---- | ------ | ------------------------- |
+| cf   | CFrame | The CFrame in world space |
+
+### Returns
+
+| Type   |
+| ------ |
+| CFrame |
+
+### Description
+
+Transforms a CFrame from world space to object space. Equivalent to `self:Inverse() * cf`.
+
+***
+
+### PointToWorldSpace
+
+### Definition
+
+```luau
+function CFrame:PointToWorldSpace(point: Vector3): Vector3
+```
+
+### Parameters
+
+| Name  | Type    | Description               |
+| ----- | ------- | ------------------------- |
+| point | Vector3 | The point in object space |
+
+### Returns
+
+| Type    |
+| ------- |
+| Vector3 |
+
+### Description
+
+Transforms a point from object space to world space.
+
+### Code Samples
+
+```luau
+local cf = CFrame.new(10, 0, 0)
+local localPoint = Vector3.new(5, 0, 0)
+local worldPoint = cf:PointToWorldSpace(localPoint) -- Vector3(15, 0, 0)
+```
+
+***
+
+### PointToObjectSpace
+
+### Definition
+
+```luau
+function CFrame:PointToObjectSpace(point: Vector3): Vector3
+```
+
+### Parameters
+
+| Name  | Type    | Description              |
+| ----- | ------- | ------------------------ |
+| point | Vector3 | The point in world space |
+
+### Returns
+
+| Type    |
+| ------- |
+| Vector3 |
+
+### Description
+
+Transforms a point from world space to object space.
+
+***
+
+### VectorToWorldSpace
+
+### Definition
+
+```luau
+function CFrame:VectorToWorldSpace(vector: Vector3): Vector3
+```
+
+### Parameters
+
+| Name   | Type    | Description                |
+| ------ | ------- | -------------------------- |
+| vector | Vector3 | The vector in object space |
+
+### Returns
+
+| Type    |
+| ------- |
+| Vector3 |
+
+### Description
+
+Transforms a vector from object space to world space (rotation only, no translation).
+
+***
+
+### VectorToObjectSpace
+
+### Definition
+
+```luau
+function CFrame:VectorToObjectSpace(vector: Vector3): Vector3
+```
+
+### Parameters
+
+| Name   | Type    | Description               |
+| ------ | ------- | ------------------------- |
+| vector | Vector3 | The vector in world space |
+
+### Returns
+
+| Type    |
+| ------- |
+| Vector3 |
+
+### Description
+
+Transforms a vector from world space to object space (rotation only, no translation).
+
+***
+
+### GetComponents
+
+### Definition
+
+```luau
+function CFrame:GetComponents(): (number, number, number, number, number, number, number, number, number, number, number, number)
+```
+
+### Returns
+
+| Type                                                                                             |
+| ------------------------------------------------------------------------------------------------ |
+| (number, number, number, number, number, number, number, number, number, number, number, number) |
+
+### Description
+
+Returns the 12 components of the CFrame: position (x, y, z) and rotation matrix (R00, R01, R02, R10, R11, R12, R20, R21, R22).
+
+### Code Samples
+
+```luau
+local cf = CFrame.new(10, 20, 30)
+local x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22 = cf:GetComponents()
+print(x, y, z) -- 10, 20, 30
+```
+
+***
+
+### ToOrientation
+
+### Definition
+
+```luau
+function CFrame:ToOrientation(): (number, number, number)
+```
+
+### Returns
+
+| Type                     |
+| ------------------------ |
+| (number, number, number) |
+
+### Description
+
+Returns the orientation of the CFrame as three Euler angles in radians (rx, ry, rz) in Y, X, Z order.
+
+***
+
+### ToEulerAnglesXYZ
+
+### Definition
+
+```luau
+function CFrame:ToEulerAnglesXYZ(): (number, number, number)
+```
+
+### Returns
+
+| Type                     |
+| ------------------------ |
+| (number, number, number) |
+
+### Description
+
+Returns the orientation of the CFrame as three Euler angles in radians (rx, ry, rz) in X, Y, Z order.
+
+### Code Samples
+
+```luau
+local cf = CFrame.Angles(0, math.pi/2, 0)
+local rx, ry, rz = cf:ToEulerAnglesXYZ()
+print(rx, ry, rz)
+```
+
+***
+
+### ToEulerAnglesYXZ
+
+### Definition
+
+```luau
+function CFrame:ToEulerAnglesYXZ(): (number, number, number)
+```
+
+### Returns
+
+| Type                     |
+| ------------------------ |
+| (number, number, number) |
+
+### Description
+
+Returns the orientation of the CFrame as three Euler angles in radians (rx, ry, rz) in Y, X, Z order.
+
+***
+
+### ToAxisAngle
+
+### Definition
+
+```luau
+function CFrame:ToAxisAngle(): (Vector3, number)
+```
+
+### Returns
+
+| Type              |
+| ----------------- |
+| (Vector3, number) |
+
+### Description
+
+Returns the axis-angle representation of the CFrame's rotation as a unit vector and rotation angle in radians.
+
+### Code Samples
+
+```luau
+local cf = CFrame.fromAxisAngle(Vector3.new(0, 1, 0), math.pi/4)
+local axis, angle = cf:ToAxisAngle()
+print(axis, angle)
+```
+
+***
+
+## Metatables
+
+### \_\_index
+
+Allows property access on CFrame values.
+
+```luau
+local cf = CFrame.new(10, 20, 30)
+local pos = cf.Position -- Vector3(10, 20, 30)
+local rightVector = cf.RightVector
+local upVector = cf.UpVector
+local lookVector = cf.LookVector
+```
+
+***
+
+### \_\_mul
+
+Multiplies two CFrames or transforms a Vector3.
+
+```luau
+-- CFrame multiplication
+local cf1 = CFrame.new(10, 0, 0)
+local cf2 = CFrame.new(5, 0, 0)
+local result = cf1 * cf2 -- CFrame at (15, 0, 0)
+
+-- Transform a Vector3
+local cf = CFrame.new(10, 20, 30)
+local point = Vector3.new(1, 1, 1)
+local transformed = cf * point
+```
+
+***
+
+### \_\_add
+
+Translates a CFrame by a Vector3.
+
+```luau
+local cf = CFrame.new(10, 20, 30)
+local offset = Vector3.new(5, 5, 5)
+local result = cf + offset -- CFrame at (15, 25, 35)
+```
+
+***
+
+### \_\_sub
+
+Translates a CFrame by the negative of a Vector3.
+
+```luau
+local cf = CFrame.new(10, 20, 30)
+local offset = Vector3.new(5, 5, 5)
+local result = cf - offset -- CFrame at (5, 15, 25)
+```
+
+***
+
+### \_\_tostring
+
+Returns a string representation of the CFrame.
+
+```luau
+local cf = CFrame.new(10, 20, 30)
+print(cf) -- "CFrame(10, 20, 30, 1, 0, 0, 0, 1, 0, 0, 0, 1)"
+```
+
+***
+
+## Properties
+
+### Position
+
+```luau
+CFrame.Position: Vector3
+```
+
+The position component of the CFrame.
+
+***
+
+### RightVector
+
+```luau
+CFrame.RightVector: Vector3
+```
+
+The right direction vector of the CFrame (X-axis).
+
+***
+
+### UpVector
+
+```luau
+CFrame.UpVector: Vector3
+```
+
+The up direction vector of the CFrame (Y-axis).
+
+***
+
+### LookVector
+
+```luau
+CFrame.LookVector: Vector3
+```
+
+The look direction vector of the CFrame (negative Z-axis).
+
+***
+
+### X
+
+```luau
+CFrame.X: number
+```
+
+The X position component.
+
+***
+
+### Y
+
+```luau
+CFrame.Y: number
+```
+
+The Y position component.
+
+***
+
+### Z
+
+```luau
+CFrame.Z: number
+```
+
+The Z position component.
+
+
+# Vector2
+
+A 2D vector with X and Y components.
+
+## Constructors
+
+### Vector2.new
+
+### Definition
+
+```luau
+function Vector2.new(x: number, y: number): Vector2
+function Vector2.new(): Vector2
+```
+
+### Parameters
+
+| Name | Type   | Description     |
+| ---- | ------ | --------------- |
+| x    | number | The X component |
+| y    | number | The Y component |
+
+### Returns
+
+| Type    |
+| ------- |
+| Vector2 |
+
+### Description
+
+Creates a new Vector2. If no parameters are provided, creates a zero vector (0, 0).
+
+### Code Samples
+
+```luau
+-- Create a vector
+local vec = Vector2.new(100, 200)
+
+-- Zero vector
+local zero = Vector2.new()
+print(zero) -- Vector2(0, 0)
+
+-- Unit vectors
+local right = Vector2.new(1, 0)
+local up = Vector2.new(0, 1)
+```
+
+***
+
+## Properties
+
+### X
+
+```luau
+Vector2.X: number
+```
+
+The X component of the vector.
+
+***
+
+### Y
+
+```luau
+Vector2.Y: number
+```
+
+The Y component of the vector.
+
+***
+
+### Magnitude
+
+```luau
+Vector2.Magnitude: number
+```
+
+The length of the vector.
+
+***
+
+### Unit
+
+```luau
+Vector2.Unit: Vector2
+```
+
+A normalized version of the vector (length of 1).
+
+***
+
+## Methods
+
+### Dot
+
+### Definition
+
+```luau
+function Vector2:Dot(other: Vector2): number
+```
+
+### Parameters
+
+| Name  | Type    | Description      |
+| ----- | ------- | ---------------- |
+| other | Vector2 | The other vector |
+
+### Returns
+
+| Type   |
+| ------ |
+| number |
+
+### Description
+
+Returns the dot product of this vector and another vector.
+
+***
+
+### Cross
+
+### Definition
+
+```luau
+function Vector2:Cross(other: Vector2): number
+```
+
+### Parameters
+
+| Name  | Type    | Description      |
+| ----- | ------- | ---------------- |
+| other | Vector2 | The other vector |
+
+### Returns
+
+| Type   |
+| ------ |
+| number |
+
+### Description
+
+Returns the 2D cross product (scalar) of this vector and another vector.
+
+***
+
+### Lerp
+
+### Definition
+
+```luau
+function Vector2:Lerp(goal: Vector2, alpha: number): Vector2
+```
+
+### Parameters
+
+| Name  | Type    | Description                              |
+| ----- | ------- | ---------------------------------------- |
+| goal  | Vector2 | The target vector to interpolate towards |
+| alpha | number  | The interpolation factor (0 to 1)        |
+
+### Returns
+
+| Type    |
+| ------- |
+| Vector2 |
+
+### Description
+
+Returns a Vector2 interpolated between this vector and the goal vector by the alpha amount.
+
+***
+
+## Metatables
+
+### \_\_add
+
+Adds two vectors.
+
+```luau
+local v1 = Vector2.new(10, 20)
+local v2 = Vector2.new(5, 15)
+local result = v1 + v2 -- Vector2(15, 35)
+```
+
+***
+
+### \_\_sub
+
+Subtracts one vector from another.
+
+```luau
+local v1 = Vector2.new(10, 20)
+local v2 = Vector2.new(5, 15)
+local result = v1 - v2 -- Vector2(5, 5)
+```
+
+***
+
+### \_\_mul
+
+Multiplies a vector by a scalar or another vector.
+
+```luau
+local vec = Vector2.new(10, 20)
+local scaled = vec * 2 -- Vector2(20, 40)
+
+-- Component-wise multiplication
+local v1 = Vector2.new(2, 3)
+local v2 = Vector2.new(4, 5)
+local result = v1 * v2 -- Vector2(8, 15)
+```
+
+***
+
+### \_\_div
+
+Divides a vector by a scalar or another vector.
+
+```luau
+local vec = Vector2.new(100, 200)
+local scaled = vec / 2 -- Vector2(50, 100)
+
+-- Component-wise division
+local v1 = Vector2.new(100, 200)
+local v2 = Vector2.new(10, 20)
+local result = v1 / v2 -- Vector2(10, 10)
+```
+
+***
+
+### \_\_unm
+
+Negates a vector.
+
+```luau
+local vec = Vector2.new(10, 20)
+local negated = -vec -- Vector2(-10, -20)
+```
+
+***
+
+### \_\_eq
+
+Compares two vectors for equality.
+
+```luau
+local v1 = Vector2.new(10, 20)
+local v2 = Vector2.new(10, 20)
+local v3 = Vector2.new(5, 15)
+
+print(v1 == v2) -- true
+print(v1 == v3) -- false
+```
+
+***
+
+### \_\_tostring
+
+Returns a string representation of the vector.
+
+```luau
+local vec = Vector2.new(100, 200)
+print(vec) -- "Vector2(100, 200)"
+```
+
+
+# Libraries
+
+
+# crypt
+
+Cryptography library providing various cryptographic functions for encryption, hashing, signing, and encoding.
+
+> **Note:** All arguments for crypt functions should be assumed as strings unless otherwise specified.
+
+## Random
+
+## crypt.random
+
+### Definition
+
+```luau
+function crypt.random(size: string): string
+```
+
+### Parameters
+
+| Name | Type   | Description                         |
+| ---- | ------ | ----------------------------------- |
+| size | string | The size of random data to generate |
+
+### Returns
+
+| Type   |
+| ------ |
+| string |
+
+### Description
+
+Generates cryptographically secure random bytes of the specified size.
+
+***
+
+## crypt.random\_deterministic
+
+### Definition
+
+```luau
+function crypt.random_deterministic(size: string, seed: string): string
+```
+
+### Parameters
+
+| Name | Type   | Description                           |
+| ---- | ------ | ------------------------------------- |
+| size | string | The size of random data to generate   |
+| seed | string | The seed for deterministic generation |
+
+### Returns
+
+| Type   |
+| ------ |
+| string |
+
+### Description
+
+Generates deterministic random bytes of the specified size using the provided seed.
+
+***
+
+## Hash
+
+## crypt.hash.sha256
+
+### Definition
+
+```luau
+function crypt.hash.sha256(data: string): string
+```
+
+### Parameters
+
+| Name | Type   | Description      |
+| ---- | ------ | ---------------- |
+| data | string | The data to hash |
+
+### Returns
+
+| Type   |
+| ------ |
+| string |
+
+### Description
+
+Computes the SHA-256 hash of the input data.
+
+***
+
+## crypt.hash.sha512
+
+### Definition
+
+```luau
+function crypt.hash.sha512(data: string): string
+```
+
+### Parameters
+
+| Name | Type   | Description      |
+| ---- | ------ | ---------------- |
+| data | string | The data to hash |
+
+### Returns
+
+| Type   |
+| ------ |
+| string |
+
+### Description
+
+Computes the SHA-512 hash of the input data.
+
+***
+
+## crypt.hash.blake2b
+
+### Definition
+
+```luau
+function crypt.hash.blake2b(data: string): string
+```
+
+### Parameters
+
+| Name | Type   | Description      |
+| ---- | ------ | ---------------- |
+| data | string | The data to hash |
+
+### Returns
+
+| Type   |
+| ------ |
+| string |
+
+### Description
+
+Computes the BLAKE2b hash of the input data.
+
+***
+
+## Password Hashing
+
+## crypt.pwhash
+
+### Definition
+
+```luau
+function crypt.pwhash(password: string, salt: string?): string
+```
+
+### Parameters
+
+| Name     | Type    | Description               |
+| -------- | ------- | ------------------------- |
+| password | string  | The password to hash      |
+| salt     | string? | Optional salt for hashing |
+
+### Returns
+
+| Type   |
+| ------ |
+| string |
+
+### Description
+
+Hashes a password using a secure password hashing algorithm. If salt is not provided, one is generated automatically.
+
+***
+
+## crypt.pwhash\_str
+
+### Definition
+
+```luau
+function crypt.pwhash_str(password: string): string
+```
+
+### Parameters
+
+| Name     | Type   | Description          |
+| -------- | ------ | -------------------- |
+| password | string | The password to hash |
+
+### Returns
+
+| Type   |
+| ------ |
+| string |
+
+### Description
+
+Hashes a password and returns a string that includes the salt and hash parameters for later verification.
+
+***
+
+## crypt.pwhash\_str\_verify
+
+### Definition
+
+```luau
+function crypt.pwhash_str_verify(hash: string, password: string): boolean
+```
+
+### Parameters
+
+| Name     | Type   | Description                      |
+| -------- | ------ | -------------------------------- |
+| hash     | string | The hash string from pwhash\_str |
+| password | string | The password to verify           |
+
+### Returns
+
+| Type    |
+| ------- |
+| boolean |
+
+### Description
+
+Verifies a password against a hash string created by `pwhash_str`.
+
+***
+
+## Secretbox
+
+## crypt.secretbox.seal
+
+### Definition
+
+```luau
+function crypt.secretbox.seal(message: string, nonce: string, key: string): string
+```
+
+### Parameters
+
+| Name    | Type   | Description                  |
+| ------- | ------ | ---------------------------- |
+| message | string | The message to encrypt       |
+| nonce   | string | The nonce (number used once) |
+| key     | string | The secret key               |
+
+### Returns
+
+| Type   |
+| ------ |
+| string |
+
+### Description
+
+Encrypts a message using secret-key authenticated encryption.
+
+***
+
+## crypt.secretbox.open
+
+### Definition
+
+```luau
+function crypt.secretbox.open(cipher: string, nonce: string, key: string): string
+```
+
+### Parameters
+
+| Name   | Type   | Description                  |
+| ------ | ------ | ---------------------------- |
+| cipher | string | The encrypted message        |
+| nonce  | string | The nonce (number used once) |
+| key    | string | The secret key               |
+
+### Returns
+
+| Type   |
+| ------ |
+| string |
+
+### Description
+
+Decrypts a message encrypted with `secretbox.seal`.
+
+***
+
+## AEAD
+
+## crypt.aead.encrypt
+
+### Definition
+
+```luau
+function crypt.aead.encrypt(message: string, aad: string, nonce: string, key: string): string
+```
+
+### Parameters
+
+| Name    | Type   | Description                   |
+| ------- | ------ | ----------------------------- |
+| message | string | The message to encrypt        |
+| aad     | string | Additional authenticated data |
+| nonce   | string | The nonce (number used once)  |
+| key     | string | The secret key                |
+
+### Returns
+
+| Type   |
+| ------ |
+| string |
+
+### Description
+
+Encrypts a message using authenticated encryption with associated data (AEAD).
+
+***
+
+## crypt.aead.decrypt
+
+### Definition
+
+```luau
+function crypt.aead.decrypt(cipher: string, aad: string, nonce: string, key: string): string
+```
+
+### Parameters
+
+| Name   | Type   | Description                   |
+| ------ | ------ | ----------------------------- |
+| cipher | string | The encrypted message         |
+| aad    | string | Additional authenticated data |
+| nonce  | string | The nonce (number used once)  |
+| key    | string | The secret key                |
+
+### Returns
+
+| Type   |
+| ------ |
+| string |
+
+### Description
+
+Decrypts a message encrypted with `aead.encrypt`.
+
+***
+
+## Public-Key Box
+
+## crypt.box.keypair
+
+### Definition
+
+```luau
+function crypt.box.keypair(): (string, string)
+```
+
+### Returns
+
+| Type             |
+| ---------------- |
+| (string, string) |
+
+### Description
+
+Generates a new public-key pair for box encryption. Returns `(publicKey, secretKey)`.
+
+***
+
+## crypt.box.encrypt
+
+### Definition
+
+```luau
+function crypt.box.encrypt(message: string, nonce: string, publicKey: string, secretKey: string): string
+```
+
+### Parameters
+
+| Name      | Type   | Description                  |
+| --------- | ------ | ---------------------------- |
+| message   | string | The message to encrypt       |
+| nonce     | string | The nonce (number used once) |
+| publicKey | string | The recipient's public key   |
+| secretKey | string | The sender's secret key      |
+
+### Returns
+
+| Type   |
+| ------ |
+| string |
+
+### Description
+
+Encrypts a message using public-key authenticated encryption.
+
+***
+
+## crypt.box.decrypt
+
+### Definition
+
+```luau
+function crypt.box.decrypt(cipher: string, nonce: string, publicKey: string, secretKey: string): string
+```
+
+### Parameters
+
+| Name      | Type   | Description                  |
+| --------- | ------ | ---------------------------- |
+| cipher    | string | The encrypted message        |
+| nonce     | string | The nonce (number used once) |
+| publicKey | string | The sender's public key      |
+| secretKey | string | The recipient's secret key   |
+
+### Returns
+
+| Type   |
+| ------ |
+| string |
+
+### Description
+
+Decrypts a message encrypted with `box.encrypt`.
+
+***
+
+## crypt.box.seal
+
+### Definition
+
+```luau
+function crypt.box.seal(message: string, publicKey: string): string
+```
+
+### Parameters
+
+| Name      | Type   | Description                |
+| --------- | ------ | -------------------------- |
+| message   | string | The message to encrypt     |
+| publicKey | string | The recipient's public key |
+
+### Returns
+
+| Type   |
+| ------ |
+| string |
+
+### Description
+
+Encrypts a message using sealed box encryption (anonymous sender).
+
+***
+
+## crypt.box.open
+
+### Definition
+
+```luau
+function crypt.box.open(cipher: string, publicKey: string, secretKey: string): string
+```
+
+### Parameters
+
+| Name      | Type   | Description                |
+| --------- | ------ | -------------------------- |
+| cipher    | string | The encrypted message      |
+| publicKey | string | The recipient's public key |
+| secretKey | string | The recipient's secret key |
+
+### Returns
+
+| Type   |
+| ------ |
+| string |
+
+### Description
+
+Decrypts a message encrypted with `box.seal`.
+
+***
+
+## crypt.box.beforenm
+
+### Definition
+
+```luau
+function crypt.box.beforenm(publicKey: string, secretKey: string): string
+```
+
+### Parameters
+
+| Name      | Type   | Description                  |
+| --------- | ------ | ---------------------------- |
+| publicKey | string | The other party's public key |
+| secretKey | string | Your secret key              |
+
+### Returns
+
+| Type   |
+| ------ |
+| string |
+
+### Description
+
+Computes a shared secret for faster encryption/decryption between the same parties.
+
+***
+
+## Signing
+
+## crypt.sign.keypair
+
+### Definition
+
+```luau
+function crypt.sign.keypair(): (string, string)
+```
+
+### Returns
+
+| Type             |
+| ---------------- |
+| (string, string) |
+
+### Description
+
+Generates a new key pair for digital signatures. Returns `(publicKey, secretKey)`.
+
+***
+
+## crypt.sign.sign
+
+### Definition
+
+```luau
+function crypt.sign.sign(message: string, secretKey: string): string
+```
+
+### Parameters
+
+| Name      | Type   | Description            |
+| --------- | ------ | ---------------------- |
+| message   | string | The message to sign    |
+| secretKey | string | The secret signing key |
+
+### Returns
+
+| Type   |
+| ------ |
+| string |
+
+### Description
+
+Signs a message and returns the signature concatenated with the message.
+
+***
+
+## crypt.sign.open
+
+### Definition
+
+```luau
+function crypt.sign.open(signedMessage: string, publicKey: string): string
+```
+
+### Parameters
+
+| Name          | Type   | Description                    |
+| ------------- | ------ | ------------------------------ |
+| signedMessage | string | The signed message from sign() |
+| publicKey     | string | The public verification key    |
+
+### Returns
+
+| Type   |
+| ------ |
+| string |
+
+### Description
+
+Verifies and extracts the original message from a signed message.
+
+***
+
+## crypt.sign.detached
+
+### Definition
+
+```luau
+function crypt.sign.detached(message: string, secretKey: string): string
+```
+
+### Parameters
+
+| Name      | Type   | Description            |
+| --------- | ------ | ---------------------- |
+| message   | string | The message to sign    |
+| secretKey | string | The secret signing key |
+
+### Returns
+
+| Type   |
+| ------ |
+| string |
+
+### Description
+
+Signs a message and returns only the signature (detached from the message).
+
+***
+
+## crypt.sign.verify\_detached
+
+### Definition
+
+```luau
+function crypt.sign.verify_detached(signature: string, message: string, publicKey: string): boolean
+```
+
+### Parameters
+
+| Name      | Type   | Description                 |
+| --------- | ------ | --------------------------- |
+| signature | string | The detached signature      |
+| message   | string | The original message        |
+| publicKey | string | The public verification key |
+
+### Returns
+
+| Type    |
+| ------- |
+| boolean |
+
+### Description
+
+Verifies a detached signature for a message.
+
+***
+
+## Base64
+
+## crypt.base64.encode
+
+### Definition
+
+```luau
+function crypt.base64.encode(data: string): string
+```
+
+### Parameters
+
+| Name | Type   | Description        |
+| ---- | ------ | ------------------ |
+| data | string | The data to encode |
+
+### Returns
+
+| Type   |
+| ------ |
+| string |
+
+### Description
+
+Encodes data to Base64 format.
+
+***
+
+## crypt.base64.decode
+
+### Definition
+
+```luau
+function crypt.base64.decode(data: string): string
+```
+
+### Parameters
+
+| Name | Type   | Description               |
+| ---- | ------ | ------------------------- |
+| data | string | The Base64 data to decode |
+
+### Returns
+
+| Type   |
+| ------ |
+| string |
+
+### Description
+
+Decodes Base64 encoded data.
+
+***
+
+## HMAC
+
+## crypt.hmac.sha256
+
+### Definition
+
+```luau
+function crypt.hmac.sha256(data: string, key: string): string
+```
+
+### Parameters
+
+| Name | Type   | Description      |
+| ---- | ------ | ---------------- |
+| data | string | The data to hash |
+| key  | string | The secret key   |
+
+### Returns
+
+| Type   |
+| ------ |
+| string |
+
+### Description
+
+Computes an HMAC using SHA-256.
+
+***
+
+## crypt.hmac.sha512
+
+### Definition
+
+```luau
+function crypt.hmac.sha512(data: string, key: string): string
+```
+
+### Parameters
+
+| Name | Type   | Description      |
+| ---- | ------ | ---------------- |
+| data | string | The data to hash |
+| key  | string | The secret key   |
+
+### Returns
+
+| Type   |
+| ------ |
+| string |
+
+### Description
+
+Computes an HMAC using SHA-512.
+
+***
+
+## HKDF
+
+## crypt.hkdf.sha256
+
+### Definition
+
+```luau
+function crypt.hkdf.sha256(key: string, salt: string, info: string): string
+```
+
+### Parameters
+
+| Name | Type   | Description                      |
+| ---- | ------ | -------------------------------- |
+| key  | string | The input keying material        |
+| salt | string | The salt value                   |
+| info | string | The context and application info |
+
+### Returns
+
+| Type   |
+| ------ |
+| string |
+
+### Description
+
+Derives a key using HKDF (HMAC-based Key Derivation Function) with SHA-256.
+
+***
+
+## JSON
+
+## crypt.json.encode
+
+### Definition
+
+```luau
+function crypt.json.encode(data: table): string
+```
+
+### Parameters
+
+| Name | Type  | Description         |
+| ---- | ----- | ------------------- |
+| data | table | The table to encode |
+
+### Returns
+
+| Type   |
+| ------ |
+| string |
+
+### Description
+
+Encodes a Luau table to a JSON string.
+
+***
+
+## crypt.json.decode
+
+### Definition
+
+```luau
+function crypt.json.decode(json: string): table
+```
+
+### Parameters
+
+| Name | Type   | Description     |
+| ---- | ------ | --------------- |
+| json | string | The JSON string |
+
+### Returns
+
+| Type  |
+| ----- |
+| table |
+
+### Description
+
+Decodes a JSON string to a Luau table.
+
+***
+
+## Hexadecimal
+
+## crypt.hexadecimal.encode
+
+### Definition
+
+```luau
+function crypt.hexadecimal.encode(bytes: string): string
+```
+
+### Parameters
+
+| Name  | Type   | Description         |
+| ----- | ------ | ------------------- |
+| bytes | string | The bytes to encode |
+
+### Returns
+
+| Type   |
+| ------ |
+| string |
+
+### Description
+
+Encodes bytes to hexadecimal string representation.
+
+***
+
+## crypt.hexadecimal.decode
+
+### Definition
+
+```luau
+function crypt.hexadecimal.decode(hex: string): string
+```
+
+### Parameters
+
+| Name | Type   | Description            |
+| ---- | ------ | ---------------------- |
+| hex  | string | The hexadecimal string |
+
+### Returns
+
+| Type   |
+| ------ |
+| string |
+
+### Description
+
+Decodes a hexadecimal string to bytes.
+
+
+# luau
+
+## compile
+
+### Definition
+
+```luau
+function luau.compile(source: string, options: {
+    optimizationLevel: 0 | 1 | 2?,
+    coverageLevel: 0 | 1 | 2?,
+    debugLevel: 0 | 1 | 2?
+}): string
+```
+
+### Parameters
+
+| Name    | Type   | Description                                           |
+| ------- | ------ | ----------------------------------------------------- |
+| source  | string | The Luau source code to compile.                      |
+| options | table  | Compilation settings (optimization, coverage, debug). |
+
+### Description
+
+Compiles the given source code into Luau bytecode. An error will be thrown if the source code contains syntax errors or other issues that prevent successful compilation.
+
+### Code Samples
+
+```luau
+local bytecode = luau.compile("print('Hello, World!')", {
+    optimizationLevel = 2,
+    coverageLevel = 0,
+    debugLevel = 1,
+})
+
+local func = load(bytecode)
+func()  -- Outputs: Hello, World!
+```
+
+***
+
+## load
+
+### Definition
+
+```luau
+function luau.load(bytecode: string, options: {
+    debugName: string?,
+    environment: { [string]: any }?,
+    injectGlobals: boolean?,
+    codegenEnabled: boolean?
+}): (... any?) -> (... any?)
+```
+
+### Parameters
+
+| Name     | Type   | Description                                         |
+| -------- | ------ | --------------------------------------------------- |
+| bytecode | string | Compiled Luau bytecode.                             |
+| options  | table  | Loading options (debug name, environment, codegen). |
+
+### Description
+
+Loads a function from the given Luau bytecode string. An error will be thrown if the bytecode is invalid or cannot be loaded. Note that if `environment` is enabled, native code generation and optimizations are forcefully disabled.
+
+### Code Samples
+
+```luau
+local bytecode = luau.compile("return 42", {
+    optimizationLevel = 2,
+    coverageLevel = 0,
+    debugLevel = 1,
+})
+
+local func = luau.load(bytecode, "MyChunk")
+print(func())  -- Outputs: 42
+```
+
+
+# memory
+
+## Types
+
+| Type    | Description     | Range / Format                 |
+| ------- | --------------- | ------------------------------ |
+| **i8**  | Signed 8-bit    | \[-128, 127]                   |
+| **u8**  | Unsigned 8-bit  | \[0, 255]                      |
+| **i16** | Signed 16-bit   | \[-32,768, 32,767]             |
+| **u16** | Unsigned 16-bit | \[0, 65,535]                   |
+| **i32** | Signed 32-bit   | \[-2.1B, 2.1B]                 |
+| **u32** | Unsigned 32-bit | \[0, 4.2B]                     |
+| **i64** | Signed 64-bit   | Approximate (Casted to Double) |
+| **u64** | Unsigned 64-bit | Approximate (Casted to Double) |
+| **f32** | 32-bit Float    | IEEE 754 Single                |
+| **f64** | 64-bit Float    | IEEE 754 Double                |
+
+> **Note:** Luau does not natively support 64-bit integers. As a result, **i64** and **u64** operations are **approximations**; these values are cast to a double-precision float, which may lead to precision loss or rounding for extremely large integers.
+
+## Functions
+
+### read\[type]
+
+#### Definition
+
+```luau
+function memory.read[type](address: number): number
+function memory.read[type](source: userdata, offset: number): number
+```
+
+#### Description
+
+Reads data of a specific type from a raw memory address or an offset from a `userdata`. Note that \[type] has to be replaced with a valid type that can be found above. Valid example is: `memory.readu32(workspace, 0x50)`.
+
+***
+
+### memory.write\[type]
+
+#### Definition
+
+```luau
+function memory.write[type](address: number, value: number): ()
+function memory.write[type](destination: userdata, offset: number, value: number): ()
+```
+
+#### Description
+
+Writes a value of a specific type to a memory address or `userdata` offset. Note that \[type] has to be replaced with a valid type that can be found above. Valid example is: `memory.writeu32(workspace, 0x50)`.
+
+***
+
+### memory.readbits
+
+#### Definition
+
+```luau
+function memory.readbits(address: number, bitOffset: number, bitSize: number): number
+function memory.readbits(source: userdata, offset: number, bitOffset: number, bitSize: number): number
+```
+
+#### Description
+
+Reads a range of bits (up to 32) from the target, starting at `bitOffset`.
+
+***
+
+### memory.writebits
+
+#### Definition
+
+```luau
+function memory.writebits(address: number, bitOffset: number, bitSize: number, value: number): ()
+function memory.writebits(destination: userdata, offset: number, bitOffset: number, bitSize: number, value: number): ()
+```
+
+#### Description
+
+Writes a range of bits (up to 32) from `value` to the destination at `bitOffset`.
+
+***
+
+### memory.readstring
+
+#### Definition
+
+```luau
+function memory.readstring(address: number): string
+function memory.readstring(source: userdata, offset: number): string
+```
+
+#### Description
+
+Reads a raw null-terminated string or byte sequence from the target location.
+
+***
+
+### memory.writestring
+
+#### Definition
+
+```luau
+function memory.writestring(address: number, value: string): ()
+function memory.writestring(destination: userdata, offset: number, value: string): ()
+```
+
+#### Description
+
+Writes the raw bytes of a string to the specified memory location.
+
+***
+
+### memory.readvector
+
+#### Definition
+
+```luau
+function memory.readvector(address: number): vector
+function memory.readvector(source: userdata, offset: number): vector
+```
+
+#### Description
+
+Reads a 3-dimensional vector from memory.
+
+***
+
+### memory.writevector
+
+#### Definition
+
+```luau
+function memory.writevector(address: number, value: vector): ()
+function memory.writevector(destination: userdata, offset: number, value: vector): ()
+```
+
+#### Description
+
+Writes a 3-dimensional vector to the target memory location.
+
+***
+
+### memory.readbuffer
+
+#### Definition
+
+```luau
+function memory.readbuffer(address: number, size: number): buffer
+function memory.readbuffer(source: userdata, offset: number, size: number): buffer
+```
+
+#### Description
+
+Reads `size` bytes into a new Luau `buffer`. Highly efficient for bulk data extraction.
+
+***
+
+### memory.writebuffer
+
+#### Definition
+
+```luau
+function memory.writebuffer(address: number, value: buffer): ()
+function memory.writebuffer(destination: userdata, offset: number, value: buffer): ()
+```
+
+#### Description
+
+Writes the contents of a Luau `buffer` directly to the specified memory location.
+
+***
+
+### memory.rtti
+
+#### Definition
+
+```luau
+function memory.rtti(address: number): string?
+function memory.rtti(source: userdata, offset: number): string?
+```
+
+#### Description
+
+Retrieves the **Run-Time Type Information** name from the target address. Returns `nil` if no type info is available.
+
+***
+
+### memory.changed
+
+#### Definition
+
+```luau
+function memory.changed(address: number, type: string, callback: (self: userdata, new: any, old: any) -> (), iterations: number?): userdata
+function memory.changed(source: userdata, offset: number, type: string, callback: (self: userdata, new: any, old: any) -> (), iterations: number?): userdata
+```
+
+#### Description
+
+Establishes a listener on a memory location that triggers the `callback` whenever the value changes. Available types: `i8`, `u8`, `i16`, `u16`, `i32`, `u32`, `i64`, `u64`, `f32`, `f64`, `string`.
+
+## Properties
+
+### memory.base
+
+#### Definition
+
+```luau
+memory.base: number
+```
+
+#### Description
+
+This is the base address for Roblox.
+
+
+# task
+
+Task scheduler library providing thread management functions for asynchronous execution.
+
+## Functions
+
+## task.spawn
+
+### Definition
+
+```luau
+function task.spawn(functionOrThread: (() -> ()) | thread, ...: any): thread
+```
+
+### Parameters
+
+| Name             | Type                 | Description                                   |
+| ---------------- | -------------------- | --------------------------------------------- |
+| functionOrThread | (() -> ()) \| thread | The function or thread to execute immediately |
+| ...              | any                  | Optional arguments to pass to the function    |
+
+### Returns
+
+| Type   |
+| ------ |
+| thread |
+
+### Description
+
+Immediately executes the provided function or resumes the provided thread in a separate thread without yielding the current thread. The new thread runs in parallel with the calling thread. Returns the thread that was spawned.
+
+### Code Samples
+
+```luau
+-- Spawn a function
+task.spawn(function()
+    print("This runs immediately in a new thread")
+    task.wait(1)
+    print("After 1 second")
+end)
+
+-- Spawn with arguments
+task.spawn(function(message, delay)
+    task.wait(delay)
+    print(message)
+end, "Hello!", 2)
+
+-- Spawn a thread
+local thread = coroutine.create(function()
+    print("Thread spawned")
+end)
+task.spawn(thread)
+```
+
+***
+
+## task.defer
+
+### Definition
+
+```luau
+function task.defer(functionOrThread: (() -> ()) | thread, ...: any): thread
+```
+
+### Parameters
+
+| Name             | Type                 | Description                                      |
+| ---------------- | -------------------- | ------------------------------------------------ |
+| functionOrThread | (() -> ()) \| thread | The function or thread to execute after deferral |
+| ...              | any                  | Optional arguments to pass to the function       |
+
+### Returns
+
+| Type   |
+| ------ |
+| thread |
+
+### Description
+
+Defers the execution of the provided function or thread until the next resumption cycle. Unlike `task.spawn`, deferred functions do not run immediately but wait until the current thread yields. This is useful for scheduling work that should happen after the current frame or operation completes.
+
+### Code Samples
+
+```luau
+-- Defer a function
+task.defer(function()
+    print("This runs after the current thread yields")
+end)
+
+-- Defer with arguments
+task.defer(function(text)
+    print("Deferred: " .. text)
+end, "Hello, world!")
+
+print("This prints first")
+
+-- Output:
+-- This prints first
+-- This runs after the current thread yields
+-- Deferred: Hello, world!
+```
+
+***
+
+## task.cancel
+
+### Definition
+
+```luau
+function task.cancel(thread: thread): ()
+```
+
+### Parameters
+
+| Name   | Type   | Description          |
+| ------ | ------ | -------------------- |
+| thread | thread | The thread to cancel |
+
+### Description
+
+Cancels a thread that was created with `task.spawn`, `task.defer`, or `task.delay`. Once cancelled, the thread will not resume execution. If the thread is already completed or cancelled, this function has no effect.
+
+### Code Samples
+
+```luau
+-- Cancel a spawned thread
+local thread = task.spawn(function()
+    task.wait(5)
+    print("This will never print")
+end)
+
+task.wait(1)
+task.cancel(thread)
+print("Thread cancelled")
+
+-- Cancel a deferred thread
+local deferredThread = task.defer(function()
+    print("This will not execute")
+end)
+task.cancel(deferredThread)
+```
+
+***
+
+## task.delay
+
+### Definition
+
+```luau
+function task.delay(duration: number, functionOrThread: (() -> ()) | thread, ...: any): thread
+```
+
+### Parameters
+
+| Name             | Type                 | Description                                   |
+| ---------------- | -------------------- | --------------------------------------------- |
+| duration         | number               | The time in seconds to wait before execution  |
+| functionOrThread | (() -> ()) \| thread | The function or thread to execute after delay |
+| ...              | any                  | Optional arguments to pass to the function    |
+
+### Returns
+
+| Type   |
+| ------ |
+| thread |
+
+### Description
+
+Schedules a function or thread to execute after the specified duration in seconds. The function runs in a separate thread after the delay. Returns the thread that will be executed. This is useful for scheduling delayed operations without blocking the current thread.
+
+### Code Samples
+
+```luau
+-- Delay execution by 3 seconds
+task.delay(3, function()
+    print("This prints after 3 seconds")
+end)
+
+-- Delay with arguments
+task.delay(5, function(message, count)
+    for i = 1, count do
+        print(message)
+    end
+end, "Delayed message", 3)
+
+-- Delay a thread
+local thread = coroutine.create(function()
+    print("Thread executed after delay")
+end)
+task.delay(2, thread)
+
+-- Cancel a delayed task
+local delayedThread = task.delay(10, function()
+    print("This will be cancelled")
+end)
+task.wait(1)
+task.cancel(delayedThread)
+print("Delayed task cancelled")
+```
+
+***
+
+## task.wait
+
+### Definition
+
+```luau
+function task.wait(duration: number?): number
+```
+
+### Parameters
+
+| Name     | Type    | Description                                                 |
+| -------- | ------- | ----------------------------------------------------------- |
+| duration | number? | The time in seconds to wait. Defaults to 0 if not provided. |
+
+### Returns
+
+| Type   |
+| ------ |
+| number |
+
+### Description
+
+Yields the current thread for at least the specified duration in seconds. Returns the actual time elapsed. This is the preferred way to yield execution in modern Luau code, replacing the legacy `wait()` function.
+
+### Code Samples
+
+```luau
+-- Wait for 2 seconds
+local elapsed = task.wait(2)
+print("Waited for " .. elapsed .. " seconds")
+
+-- Wait with default duration
+task.wait() -- Waits for the next frame/cycle
+
+-- Use in a loop
+for i = 1, 5 do
+    print("Iteration " .. i)
+    task.wait(1)
+end
+
+-- Countdown timer
+for i = 10, 1, -1 do
+    print(i)
+    task.wait(1)
+end
+print("Blast off!")
+```
+
+
+# Drawing
+
+## Overview
+
+Drawing itself, within **Severe** refers to a library which has functions for static ([retained](https://en.wikipedia.org/wiki/Retained_mode)) rendering of objects. We offer 3 different ways of rendering:
+
+* **Dynamic:** Offering best performance, and fast usage.
+* **Immediate:** Ideal for a small amount of objects, or if the objects move.
+* **Static:** [Retained](https://en.wikipedia.org/wiki/Retained_mode) drawing, being best if you can manage it properly, or for user interfaces.
+
+
+# Classes
+
+
+# Circle
+
+## Definition
+
+```luau
+local Circle = Circle.new() -- Or, Drawing.new("Circle")
+```
+
+## Properties
+
+### Visible
+
+```luau
+Circle.Visible: boolean
+```
+
+***
+
+### Color
+
+```luau
+Circle.Color: Color3
+```
+
+***
+
+### ZIndex
+
+```luau
+Circle.ZIndex: number
+```
+
+Range `[-2147483647, 2147483647]`.
+
+***
+
+### Opacity
+
+```luau
+Circle.Opacity: number
+```
+
+***
+
+### Thickness
+
+```luau
+Circle.Thickness: number
+```
+
+***
+
+### NumSides
+
+```luau
+Circle.NumSides: number
+```
+
+***
+
+### Radius
+
+```luau
+Circle.Radius: number
+```
+
+***
+
+### Filled
+
+```luau
+Circle.Filled: boolean
+```
+
+***
+
+### Position
+
+```luau
+Circle.Position: Vector2
+```
+
+***
+
+## Methods
+
+### Remove
+
+```luau
+Circle:Remove(): ()
+```
+
+Permanently removes the drawing object.
+
+
+# Image
+
+## Definition
+
+```luau
+local Image = Image.new() -- Or, Drawing.new("Image")
+```
+
+## Properties
+
+### Visible
+
+```luau
+Image.Visible: boolean
+```
+
+***
+
+### Color
+
+```luau
+Image.Color: Color3
+```
+
+***
+
+### ZIndex
+
+```luau
+Image.ZIndex: number
+```
+
+Range `[-2147483647, 2147483647]`.
+
+***
+
+### Opacity
+
+```luau
+Image.Opacity: number
+```
+
+***
+
+### Url
+
+```luau
+Image.Url: string
+```
+
+***
+
+### Data
+
+```luau
+Image.Data: string
+```
+
+***
+
+### Gif
+
+```luau
+Image.Gif: boolean
+```
+
+***
+
+### Delay
+
+```luau
+Image.Delay: number
+```
+
+***
+
+### Position
+
+```luau
+Image.Position: Vector2
+```
+
+***
+
+### Size
+
+```luau
+Image.Size: Vector2
+```
+
+***
+
+### Rounding
+
+```luau
+Image.Rounding: number
+```
+
+***
+
+### ImageSize
+
+```luau
+Image.ImageSize: Vector2
+```
+
+***
+
+!\[\[]]
+
+## Methods
+
+### Remove
+
+```luau
+Image:Remove(): ()
+```
+
+Permanently removes the drawing object.
+
+
+# Polyline
+
+## Definition
+
+```luau
+local Polyline = Polyline.new() -- Or, Drawing.new("Polyline")
+```
+
+## Properties
+
+### Visible
+
+```luau
+Polyline.Visible: boolean
+```
+
+***
+
+### Color
+
+```luau
+Polyline.Color: Color3
+```
+
+***
+
+### ZIndex
+
+```luau
+Polyline.ZIndex: number
+```
+
+Range `[-2147483647, 2147483647]`.
+
+***
+
+### Opacity
+
+```luau
+Polyline.Opacity: number
+```
+
+***
+
+### Points
+
+```luau
+Polyline.Points: { Vector2 }
+```
+
+An array of Vector2 points that make up the polyline.
+
+***
+
+### Thickness
+
+```luau
+Polyline.Thickness: number
+```
+
+***
+
+### Filled
+
+```luau
+Polyline.Filled: boolean
+```
+
+***
+
+## Methods
+
+### Remove
+
+```luau
+Polyline:Remove(): ()
+```
+
+Permanently removes the drawing object.
+
+
+# Square
+
+## Definition
+
+```luau
+local Square = Square.new() -- Or, Drawing.new("Square")
+```
+
+## Properties
+
+### Visible
+
+```luau
+Square.Visible: boolean
+```
+
+***
+
+### Color
+
+```luau
+Square.Color: Color3
+```
+
+***
+
+### ZIndex
+
+```luau
+Square.ZIndex: number
+```
+
+Range `[-2147483647, 2147483647]`.
+
+***
+
+### Opacity
+
+```luau
+Square.Opacity: number
+```
+
+***
+
+### Thickness
+
+```luau
+Square.Thickness: number
+```
+
+***
+
+### Size
+
+```luau
+Square.Size: Vector2
+```
+
+***
+
+### Position
+
+```luau
+Square.Position: Vector2
+```
+
+***
+
+### Filled
+
+```luau
+Square.Filled: boolean
+```
+
+***
+
+### Rounding
+
+```luau
+Square.Rounding: number
+```
+
+***
+
+## Methods
+
+### Remove
+
+```luau
+Square:Remove(): ()
+```
+
+Permanently removes the drawing object.
+
+
+# Text
+
+## Definition
+
+```luau
+local Text = Text.new() -- Or, Drawing.new("Text")
+```
+
+## Properties
+
+### Visible
+
+```luau
+Text.Visible: boolean
+```
+
+***
+
+### Color
+
+```luau
+Text.Color: Color3
+```
+
+***
+
+### ZIndex
+
+```luau
+Text.ZIndex: number
+```
+
+Range `[-2147483647, 2147483647]`.
+
+***
+
+### Opacity
+
+```luau
+Text.Opacity: number
+```
+
+***
+
+### Text
+
+```luau
+Text.Text: string
+```
+
+***
+
+### Size
+
+```luau
+Text.Size: number
+```
+
+***
+
+### Center
+
+```luau
+Text.Center: boolean
+```
+
+***
+
+### Outline
+
+```luau
+Text.Outline: boolean
+```
+
+***
+
+### OutlineColor
+
+```luau
+Text.OutlineColor: Vector3
+```
+
+***
+
+### Position
+
+```luau
+Text.Position: Vector2
+```
+
+***
+
+### TextBounds
+
+```luau
+Text.TextBounds: Vector2
+```
+
+***
+
+### Font
+
+```luau
+Text.Font: number
+```
+
+Range `[0, 31]`.
+
+***
+
+## Methods
+
+### Remove
+
+```luau
+Text:Remove(): ()
+```
+
+Permanently removes the drawing object.
+
+
+# Triangle
+
+## Definition
+
+```luau
+local Triangle = Triangle.new() -- Or, Drawing.new("Triangle")
+```
+
+## Properties
+
+### Visible
+
+```luau
+Triangle.Visible: boolean
+```
+
+***
+
+### Color
+
+```luau
+Triangle.Color: Color3
+```
+
+***
+
+### ZIndex
+
+```luau
+Triangle.ZIndex: number
+```
+
+Range `[-2147483647, 2147483647]`.
+
+***
+
+### Opacity
+
+```luau
+Triangle.Opacity: number
+```
+
+***
+
+### Transparency
+
+```luau
+Triangle.Transparency: number
+```
+
+***
+
+### Thickness
+
+```luau
+Triangle.Thickness: number
+```
+
+***
+
+### PointA
+
+```luau
+Triangle.PointA: Vector2
+```
+
+***
+
+### PointB
+
+```luau
+Triangle.PointB: Vector2
+```
+
+***
+
+### PointC
+
+```luau
+Triangle.PointC: Vector2
+```
+
+***
+
+### Filled
+
+```luau
+Triangle.Filled: boolean
+```
+
+***
+
+## Methods
+
+### Remove
+
+```luau
+Triangle:Remove(): ()
+```
+
+Permanently removes the drawing object.
+
+
+# Dynamic
+
+## Overview
+
+Dynamic drawing allows you to automatically attach drawing objects to 3D world positions or instances. Drawing objects automatically update their screen position based on the camera's view of the linked points.
+
+## Functions
+
+### Drawing.attach
+
+**Definition**
+
+```luau
+function Drawing.attach(config: { [Drawing]: AttachmentConfig }): Cluster
+```
+
+**Parameters**
+
+| Name   | Type                             | Description                                                        |
+| ------ | -------------------------------- | ------------------------------------------------------------------ |
+| config | { \[Drawing]: AttachmentConfig } | A table mapping drawing objects to their attachment configurations |
+
+**Returns**
+
+| Type    | Description                                                |
+| ------- | ---------------------------------------------------------- |
+| Cluster | A cluster object that can be destroyed, paused, or resumed |
+
+**Description**
+
+Attaches drawing objects to 3D points in the world. The drawing objects will automatically update their screen positions based on the camera's view of the linked points. Each drawing object can be configured with different attachment properties depending on its type.
+
+**Attachment Configurations**
+
+For `Square`, `Circle`, `Text`, `Image`:
+
+| Property    | Type    | Description                              |
+| ----------- | ------- | ---------------------------------------- |
+| Link        | Point   | The point to attach the drawing to       |
+| Size        | UDim2   | Size of the drawing (Scale/Offset)       |
+| AnchorPoint | Vector2 | Anchor point for positioning (0-1 range) |
+
+For `Line`:
+
+| Property | Type  | Description                |
+| -------- | ----- | -------------------------- |
+| From     | Point | Starting point of the line |
+| To       | Point | Ending point of the line   |
+
+**Code Samples**
+
+```luau
+local Head = PointInstance.new(game.Players.LocalPlayer.Character.Head :: BasePart)
+local Mesh = PointInstance.new(workspace.SpawnLocation :: BasePart)
+
+local Square = Drawing.new 'Square'
+Square.Visible = true
+Square.Filled = true
+Square.Color = Color3.fromRGB(255, 255, 125)
+
+local Line = Drawing.new 'Line'
+Line.Visible = true
+Line.Color = Color3.fromRGB(255, 0, 0)
+Line.Thickness = 2
+
+local Cluster = Drawing.attach {
+    [Square] = {
+        Link = Head,
+        Size = UDim2.fromScale(1, 1),
+        AnchorPoint = Vector2.new(0.5, 0.5)
+    },
+
+    [Line] = {
+        From = Head,
+        To = Mesh,
+    }
+}
+
+task.wait(10)
+
+-- Later, when done:
+Cluster:Destroy()
+```
+
+***
+
+## Classes
+
+### PointInstance
+
+**Definition**
+
+```luau
+PointInstance.new(instance: BasePart): PointInstance
+```
+
+**Description**
+
+Creates a point tracker for an instance with a CFrame property. The point automatically tracks the instance's position in the world. Only instances that have a CFrame property (e.g., BasePart) can be used.
+
+**Properties**
+
+| Property | Type    | Description                                         |
+| -------- | ------- | --------------------------------------------------- |
+| CFrame   | CFrame  | The current CFrame of the tracked instance          |
+| Size     | Vector3 | The current Size of the tracked instance            |
+| Active   | boolean | Whether the point is actively tracking the instance |
+
+**Methods**
+
+| Method  | Description                            |
+| ------- | -------------------------------------- |
+| Destroy | Stops tracking and cleans up resources |
+
+**Code Samples**
+
+```luau
+local Head = PointInstance.new(game.Players.LocalPlayer.Character.Head :: BasePart)
+
+-- Access properties
+print(Head.CFrame)
+print(Head.Size)
+print(Head.Active)
+
+task.wait(10)
+
+-- Clean up:
+Head:Destroy()
+```
+
+***
+
+### Point3D
+
+**Definition**
+
+```luau
+Point3D.new(position: Vector3): Point3D
+```
+
+**Description**
+
+Creates a point at a fixed world-space position. The point represents a static location in 3D space.
+
+**Properties**
+
+| Property | Type    | Description                           |
+| -------- | ------- | ------------------------------------- |
+| Position | Vector3 | The world-space position of the point |
+| Active   | boolean | Whether the point is active           |
+
+**Methods**
+
+| Method  | Description                           |
+| ------- | ------------------------------------- |
+| Destroy | Cleans up the point and its resources |
+
+**Code Samples**
+
+```luau
+local StaticPoint = Point3D.new(Vector3.new(0, 10, 0))
+
+-- Access properties
+print(StaticPoint.Position)
+print(StaticPoint.Active)
+
+-- Clean up when done
+StaticPoint:Destroy()
+```
+
+***
+
+### Cluster
+
+**Description**
+
+A cluster is returned by `Drawing.attach` and manages a group of attached drawing objects. It provides methods to control the lifecycle of all attached drawings.
+
+**Methods**
+
+| Method  | Description                                               |
+| ------- | --------------------------------------------------------- |
+| Destroy | Destroys the cluster and all attached drawing objects     |
+| Pause   | Pauses automatic updates for all drawings in the cluster  |
+| Resume  | Resumes automatic updates for all drawings in the cluster |
+
+**Code Samples**
+
+```luau
+local Head = PointInstance.new(game.Players.LocalPlayer.Character.Head :: BasePart)
+
+local Square = Drawing.new 'Square'
+Square.Visible = true
+
+local Cluster = Drawing.attach {
+    [Square] = {
+        Link = Head,
+        Size = UDim2.fromScale(1, 1),
+        AnchorPoint = Vector2.new(0.5, 0.5)
+    }
+}
+
+-- Pause updates
+Cluster:Pause()
+
+-- Resume updates
+Cluster:Resume()
+
+-- Clean up everything
+Cluster:Destroy()
+```
+
+
+# Immediate
+
+## Overview
+
+Traditional drawing uses **retained mode**—objects persist until removed. **DrawingImmediate** is **immediate mode**; objects exist only during `RunService.Render` calls.
+
+## Examples
+
+```luau
+local Players = game:GetService("Players")
+local CurrentCamera = workspace.CurrentCamera
+local RunService = game:GetService("RunService")
+
+RunService.Render:Connect(function()
+    for Index, Player in Players:GetChildren() do
+        local Character = Player.Character
+        if not Character then continue end
+        
+        local Head = Character:FindFirstChild("Head")
+        if not Head then continue end
+        
+        local Screen, Visible = CurrentCamera:WorldToScreenPoint(Head.Position)
+        
+        if Visible then
+            DrawingImmediate.OutlinedText(Screen, 14, Color3.fromRGB(125, 165, 255), 1, Player.Name, true, "Tamzen")
+        end
+    end
+end)
+```
+
+## Functions
+
+Call inside `RunService.Render` to avoid flickering. No return values.
+
+### Line
+
+```luau
+function DrawingImmediate.Line(a: Vector2, b: Vector2, color: Color3, opacity: number, segments: number, thickness: number): ()
+```
+
+| Name      | Type    | Description    |
+| --------- | ------- | -------------- |
+| a         | Vector2 | Start position |
+| b         | Vector2 | End position   |
+| color     | Color3  | Line color     |
+| opacity   | number  | Opacity (0-1)  |
+| segments  | number  | Line segments  |
+| thickness | number  | Line thickness |
+
+***
+
+### Circle
+
+```luau
+function DrawingImmediate.Circle(position: Vector2, radius: number, color: Color3, opacity: number, thickness: number): ()
+```
+
+| Name      | Type    | Description       |
+| --------- | ------- | ----------------- |
+| position  | Vector2 | Center position   |
+| radius    | number  | Circle radius     |
+| color     | Color3  | Outline color     |
+| opacity   | number  | Opacity (0-1)     |
+| thickness | number  | Outline thickness |
+
+***
+
+### FilledCircle
+
+```luau
+function DrawingImmediate.FilledCircle(position: Vector2, radius: number, color: Color3, opacity: number): ()
+```
+
+| Name     | Type    | Description     |
+| -------- | ------- | --------------- |
+| position | Vector2 | Center position |
+| radius   | number  | Circle radius   |
+| color    | Color3  | Fill color      |
+| opacity  | number  | Opacity (0-1)   |
+
+***
+
+### Triangle
+
+```luau
+function DrawingImmediate.Triangle(a: Vector2, b: Vector2, c: Vector2, color: Color3, opacity: number, thickness: number): ()
+```
+
+| Name      | Type    | Description       |
+| --------- | ------- | ----------------- |
+| a         | Vector2 | Vertex A          |
+| b         | Vector2 | Vertex B          |
+| c         | Vector2 | Vertex C          |
+| color     | Color3  | Outline color     |
+| opacity   | number  | Opacity (0-1)     |
+| thickness | number  | Outline thickness |
+
+***
+
+### FilledTriangle
+
+```luau
+function DrawingImmediate.FilledTriangle(a: Vector2, b: Vector2, c: Vector2, color: Color3, opacity: number): ()
+```
+
+| Name    | Type    | Description   |
+| ------- | ------- | ------------- |
+| a       | Vector2 | Vertex A      |
+| b       | Vector2 | Vertex B      |
+| c       | Vector2 | Vertex C      |
+| color   | Color3  | Fill color    |
+| opacity | number  | Opacity (0-1) |
+
+***
+
+### Rectangle
+
+```luau
+function DrawingImmediate.Rectangle(position: Vector2, size: Vector2, color: Color3, opacity: number, thickness: number): ()
+```
+
+| Name      | Type    | Description       |
+| --------- | ------- | ----------------- |
+| position  | Vector2 | Top-left position |
+| size      | Vector2 | Width/height      |
+| color     | Color3  | Outline color     |
+| opacity   | number  | Opacity (0-1)     |
+| thickness | number  | Outline thickness |
+
+***
+
+### FilledRectangle
+
+```luau
+function DrawingImmediate.FilledRectangle(position: Vector2, size: Vector2, color: Color3, opacity: number): ()
+```
+
+| Name     | Type    | Description       |
+| -------- | ------- | ----------------- |
+| position | Vector2 | Top-left position |
+| size     | Vector2 | Width/height      |
+| color    | Color3  | Fill color        |
+| opacity  | number  | Opacity (0-1)     |
+
+***
+
+### Quad
+
+```luau
+function DrawingImmediate.Quad(a: Vector2, b: Vector2, c: Vector2, d: Vector2, color: Color3, opacity: number, thickness: number): ()
+```
+
+| Name      | Type    | Description       |
+| --------- | ------- | ----------------- |
+| a         | Vector2 | Vertex A          |
+| b         | Vector2 | Vertex B          |
+| c         | Vector2 | Vertex C          |
+| d         | Vector2 | Vertex D          |
+| color     | Color3  | Outline color     |
+| opacity   | number  | Opacity (0-1)     |
+| thickness | number  | Outline thickness |
+
+***
+
+### FilledQuad
+
+```luau
+function DrawingImmediate.FilledQuad(a: Vector2, b: Vector2, c: Vector2, d: Vector2, color: Color3, opacity: number): ()
+```
+
+| Name    | Type    | Description   |
+| ------- | ------- | ------------- |
+| a       | Vector2 | Vertex A      |
+| b       | Vector2 | Vertex B      |
+| c       | Vector2 | Vertex C      |
+| d       | Vector2 | Vertex D      |
+| color   | Color3  | Fill color    |
+| opacity | number  | Opacity (0-1) |
+
+***
+
+### Polyline
+
+```luau
+function DrawingImmediate.Polyline(points: { Vector2 }, color: Color3, opacity: number, thickness: number): ()
+```
+
+| Name      | Type       | Description     |
+| --------- | ---------- | --------------- |
+| points    | { Vector2} | Array of points |
+| color     | Color3     | Line color      |
+| opacity   | number     | Opacity (0-1)   |
+| thickness | number     | Line thickness  |
+
+***
+
+### Text
+
+```luau
+function DrawingImmediate.Text(position: Vector2, size: number, color: Color3, opacity: number, text: string, center: boolean, font: string?): ()
+```
+
+| Name     | Type    | Description          |
+| -------- | ------- | -------------------- |
+| position | Vector2 | Text position        |
+| size     | number  | Text size            |
+| color    | Color3  | Text color           |
+| opacity  | number  | Opacity (0-1)        |
+| text     | string  | Text content         |
+| center   | boolean | Center align         |
+| font     | string? | Font name (optional) |
+
+***
+
+### OutlinedText
+
+```luau
+function DrawingImmediate.OutlinedText(position: Vector2, size: number, color: Color3, opacity: number, text: string, center: boolean, font: string?): ()
+```
+
+| Name     | Type    | Description          |
+| -------- | ------- | -------------------- |
+| position | Vector2 | Text position        |
+| size     | number  | Text size            |
+| color    | Color3  | Text color           |
+| opacity  | number  | Opacity (0-1)        |
+| text     | string  | Text content         |
+| center   | boolean | Center align         |
+| font     | string? | Font name (optional) |
+
+***
+
+### Image
+
+```luau
+function DrawingImmediate.Image(source: string, position: Vector2, size: Vector2, color: Color3, opacity: number, is_gif: boolean, rounding: number): ()
+```
+
+| Name     | Type    | Description      |
+| -------- | ------- | ---------------- |
+| source   | string  | Image URL/source |
+| position | Vector2 | Image position   |
+| size     | Vector2 | Image size       |
+| color    | Color3  | Tint color       |
+| opacity  | number  | Opacity (0-1)    |
+| is\_gif  | boolean | GIF animation    |
+| rounding | number  | Corner rounding  |
+
+***
+
+### GetTextBounds
+
+```luau
+function DrawingImmediate.GetTextBounds(font: string, size: number, text: string): Vector2
+```
+
+| Name | Type   | Description  |
+| ---- | ------ | ------------ |
+| font | string | Font name    |
+| size | number | Text size    |
+| text | string | Text content |
+
+<table data-header-hidden data-full-width="false"><thead><tr><th valign="middle">Type</th></tr></thead><tbody><tr><td valign="middle"><pre class="language-luau"><code class="lang-luau">Vector2
+</code></pre></td></tr></tbody></table>
+
+Calculates text boundaries. Returns `(width, height)`.
+
+
+# Static
+
+## Functions
+
+### Drawing.new
+
+**Definition**
+
+```luau
+function Drawing.new(class: string): userdata
+```
+
+**Parameters**
+
+| Name  | Type   | Description                                                |
+| ----- | ------ | ---------------------------------------------------------- |
+| class | string | Valid classes can be found under the "Classes" sub-folder. |
+
+**Description**
+
+Will create a new static drawing on the screen, it's retained, meaning you will have to manually describe it (set it's color, position, size), and manually clean-up.
+
+***
+
+### Drawing.clear
+
+**Definition**
+
+```luau
+function Drawing.clear(): ()
+```
+
+**Description**
+
+Will clear all the static objects created, this will also include static objects that were created by other scripts.
+
+***
+
+> **Note:** Not removing static drawings can result in degraded performance and memory leaks. Creating a lot of static drawings may result in render thread error, this is a known issue.
+
+
+# World
+
+
+# BasePart
+
+BasePart is the base class for all physical part objects in the game world.
+
+## Applies To
+
+* Part
+* MeshPart
+* UnionOperation
+* SpawnLocation
+* CornerWedgePart
+* TrussPart
+* WedgePart
+
+## CanCollide
+
+### Definition
+
+```luau
+BasePart.CanCollide: boolean
+```
+
+### Description
+
+Determines whether the part can collide with other parts. Can be read and written.
+
+***
+
+## Transparency
+
+### Definition
+
+```luau
+BasePart.Transparency: number
+```
+
+### Description
+
+The transparency of the part, ranging from 0 (opaque) to 1 (fully transparent). Can be read and written.
+
+***
+
+## Size
+
+### Definition
+
+```luau
+BasePart.Size: Vector3
+```
+
+### Description
+
+The size of the part in studs. Can be read and written.
+
+***
+
+## Position
+
+### Definition
+
+```luau
+BasePart.Position: Vector3
+```
+
+### Description
+
+The position of the part in world space. Can be read and written.
+
+***
+
+## CFrame
+
+### Definition
+
+```luau
+BasePart.CFrame: CFrame
+```
+
+### Description
+
+The position and orientation of the part in world space. Can be read and written.
+
+***
+
+## Velocity
+
+### Definition
+
+```luau
+BasePart.Velocity: Vector3
+```
+
+### Description
+
+The current velocity of the part. Can be read and written.
+
+***
+
+## RightVector
+
+### Definition
+
+```luau
+BasePart.RightVector: Vector3
+```
+
+### Description
+
+The right vector of the part's orientation (read-only).
+
+***
+
+## UpVector
+
+### Definition
+
+```luau
+BasePart.UpVector: Vector3
+```
+
+### Description
+
+The up vector of the part's orientation (read-only).
+
+***
+
+## LookVector
+
+### Definition
+
+```luau
+BasePart.LookVector: Vector3
+```
+
+### Description
+
+The forward/look vector of the part's orientation (read-only).
+
+***
+
+## IsNetworkSleeping
+
+### Definition
+
+```luau
+BasePart.IsNetworkSleeping: boolean
+```
+
+### Description
+
+Indicates whether the part is currently network sleeping (read-only).
+
+***
+
+## Description
+
+### Definition
+
+```luau
+BasePart.Description: string
+```
+
+### Description
+
+A user-defined description for the part. Can be read and written.
+
+***
+
+## TextureId
+
+**Applies to: MeshPart, SpecialMesh**
+
+### Definition
+
+```luau
+MeshPart.TextureId: string
+SpecialMesh.TextureId: string
+```
+
+### Description
+
+The asset ID of the texture applied to the mesh. Can be read and written.
+
+***
+
+## MeshId
+
+**Applies to: MeshPart, SpecialMesh**
+
+### Definition
+
+```luau
+MeshPart.MeshId: string
+SpecialMesh.MeshId: string
+```
+
+### Description
+
+The asset ID of the mesh geometry. Can be read and written.
+
+
+# BillboardGui
+
+A GUI object that is rendered in 3D space and faces the camera.
+
+## Adornee
+
+### Definition
+
+```luau
+BillboardGui.Adornee: Instance?
+```
+
+### Description
+
+The instance that this BillboardGui is attached to, or `nil` if not attached (read-only).
+
+
+# Camera
+
+The Camera object controls the player's view in the game.
+
+## ViewportSize
+
+### Definition
+
+```luau
+Camera.ViewportSize: Vector2
+```
+
+### Description
+
+The size of the camera's viewport in pixels (read-only).
+
+***
+
+## FieldOfView
+
+### Definition
+
+```luau
+Camera.FieldOfView: number
+```
+
+### Description
+
+The field of view of the camera in degrees (read-only).
+
+***
+
+## Position
+
+### Definition
+
+```luau
+Camera.Position: Vector3
+```
+
+### Description
+
+The position of the camera in world space. Can be read and written.
+
+***
+
+## CFrame
+
+### Definition
+
+```luau
+Camera.CFrame: CFrame
+```
+
+### Description
+
+The position and orientation of the camera in world space. Can be read and written.
+
+***
+
+## Velocity
+
+### Definition
+
+```luau
+Camera.Velocity: Vector3
+```
+
+### Description
+
+The current velocity of the camera. Can be read and written.
+
+***
+
+## RightVector
+
+### Definition
+
+```luau
+Camera.RightVector: Vector3
+```
+
+### Description
+
+The right vector of the camera's orientation. Can be read and written.
+
+***
+
+## UpVector
+
+### Definition
+
+```luau
+Camera.UpVector: Vector3
+```
+
+### Description
+
+The up vector of the camera's orientation. Can be read and written.
+
+***
+
+## LookVector
+
+### Definition
+
+```luau
+Camera.LookVector: Vector3
+```
+
+### Description
+
+The forward/look vector of the camera's orientation. Can be read and written.
+
+***
+
+## CameraSubject
+
+### Definition
+
+```luau
+Camera.CameraSubject: Instance?
+```
+
+### Description
+
+The instance that the camera is focused on. Can be set to change the camera's subject.
+
+***
+
+## WorldToScreenPoint
+
+### Definition
+
+```luau
+function Camera:WorldToScreenPoint(worldPosition: Vector3): (Vector3, boolean)
+```
+
+### Parameters
+
+| Name          | Type    | Description                 |
+| ------------- | ------- | --------------------------- |
+| worldPosition | Vector3 | The position in world space |
+
+### Returns
+
+| Type               |
+| ------------------ |
+| (Vector3, boolean) |
+
+### Description
+
+Converts a world position to screen coordinates. Returns a Vector3 with X and Y as screen coordinates (Z is depth), and a boolean indicating if the point is visible on screen.
+
+
+# DataModel
+
+The DataModel (accessed via the `game` global) is the root object of the game hierarchy.
+
+## HttpGet
+
+### Definition
+
+```luau
+function game:HttpGet(url: string): string
+```
+
+### Parameters
+
+| Name | Type   | Description                      |
+| ---- | ------ | -------------------------------- |
+| url  | string | The URL to send a GET request to |
+
+### Returns
+
+| Type   |
+| ------ |
+| string |
+
+### Description
+
+Sends an HTTP GET request to the specified URL and returns the response as a string.
+
+***
+
+## HttpPost
+
+### Definition
+
+```luau
+function game:HttpPost(url: string, data: string): string
+```
+
+### Parameters
+
+| Name | Type   | Description                          |
+| ---- | ------ | ------------------------------------ |
+| url  | string | The URL to send a POST request to    |
+| data | string | The data to send in the POST request |
+
+### Returns
+
+| Type   |
+| ------ |
+| string |
+
+### Description
+
+Sends an HTTP POST request to the specified URL with the provided data and returns the response as a string.
+
+***
+
+## GetService
+
+### Definition
+
+```luau
+function game:GetService(name: string): Instance
+```
+
+### Parameters
+
+| Name | Type   | Description             |
+| ---- | ------ | ----------------------- |
+| name | string | The name of the service |
+
+### Returns
+
+| Type     |
+| -------- |
+| Instance |
+
+### Description
+
+Returns the service with the specified name. Creates the service if it doesn't exist.
+
+***
+
+## GetHwid
+
+### Definition
+
+```luau
+function game:GetHwid(): string
+```
+
+### Returns
+
+| Type   |
+| ------ |
+| string |
+
+### Description
+
+Returns the hardware ID of the current machine.
+
+***
+
+## GetPing
+
+### Definition
+
+```luau
+function game:GetPing(): number
+```
+
+### Returns
+
+| Type   |
+| ------ |
+| number |
+
+### Description
+
+Returns the current network ping in milliseconds.
+
+***
+
+## PlaceId
+
+### Definition
+
+```luau
+game.PlaceId: number
+```
+
+### Description
+
+The unique identifier for the current place (read-only).
+
+***
+
+## GameId
+
+### Definition
+
+```luau
+game.GameId: number
+```
+
+### Description
+
+The unique identifier for the current game (read-only).
+
+***
+
+## JobId
+
+### Definition
+
+```luau
+game.JobId: string
+```
+
+### Description
+
+The unique identifier for the current server job (read-only).
+
+
+# Humanoid
+
+Controls the behavior of character models, including health and movement.
+
+## Health
+
+### Definition
+
+```luau
+Humanoid.Health: number
+```
+
+### Description
+
+The current health of the humanoid. Can be read and written.
+
+***
+
+## MaxHealth
+
+### Definition
+
+```luau
+Humanoid.MaxHealth: number
+```
+
+### Description
+
+The maximum health of the humanoid. Can be read and written.
+
+
+# Instance
+
+The base class for all objects in the game world.
+
+## GetTags
+
+### Definition
+
+```luau
+function Instance:GetTags(): { string }
+```
+
+### Returns
+
+| Type       |
+| ---------- |
+| { string } |
+
+### Description
+
+Returns an array of all tags assigned to this instance.
+
+***
+
+## HasTag
+
+### Definition
+
+```luau
+function Instance:HasTag(tag: string): boolean
+```
+
+### Parameters
+
+| Name | Type   | Description          |
+| ---- | ------ | -------------------- |
+| tag  | string | The tag to check for |
+
+### Returns
+
+| Type    |
+| ------- |
+| boolean |
+
+### Description
+
+Returns `true` if the instance has the specified tag, otherwise `false`.
+
+***
+
+## AddTag
+
+### Definition
+
+```luau
+function Instance:AddTag(tag: string): ()
+```
+
+### Parameters
+
+| Name | Type   | Description    |
+| ---- | ------ | -------------- |
+| tag  | string | The tag to add |
+
+### Description
+
+Adds a tag to this instance.
+
+***
+
+## RemoveTag
+
+### Definition
+
+```luau
+function Instance:RemoveTag(tag: string): ()
+```
+
+### Parameters
+
+| Name | Type   | Description       |
+| ---- | ------ | ----------------- |
+| tag  | string | The tag to remove |
+
+### Description
+
+Removes a tag from this instance.
+
+***
+
+## ClearTags
+
+### Definition
+
+```luau
+function Instance:ClearTags(): ()
+```
+
+### Description
+
+Removes all tags from this instance.
+
+***
+
+## GetAttributes
+
+### Definition
+
+```luau
+function Instance:GetAttributes(): { [string]: any }
+```
+
+### Returns
+
+| Type               |
+| ------------------ |
+| { \[string]: any } |
+
+### Description
+
+Returns a dictionary of all attributes assigned to this instance.
+
+***
+
+## GetAttribute
+
+### Definition
+
+```luau
+function Instance:GetAttribute(name: string): any
+```
+
+### Parameters
+
+| Name | Type   | Description        |
+| ---- | ------ | ------------------ |
+| name | string | The attribute name |
+
+### Returns
+
+| Type |
+| ---- |
+| any  |
+
+### Description
+
+Returns the value of the specified attribute, or `nil` if it doesn't exist.
+
+***
+
+## SetAttribute
+
+### Definition
+
+```luau
+function Instance:SetAttribute(name: string, value: any): ()
+```
+
+### Parameters
+
+| Name  | Type   | Description         |
+| ----- | ------ | ------------------- |
+| name  | string | The attribute name  |
+| value | any    | The attribute value |
+
+### Description
+
+Sets the value of an attribute on this instance. Setting to `nil` removes the attribute.
+
+***
+
+## FindFirstChild
+
+### Definition
+
+```luau
+function Instance:FindFirstChild(name: string): Instance?
+```
+
+### Parameters
+
+| Name | Type   | Description           |
+| ---- | ------ | --------------------- |
+| name | string | The name of the child |
+
+### Returns
+
+| Type      |
+| --------- |
+| Instance? |
+
+### Description
+
+Returns the first child with the specified name, or `nil` if not found.
+
+***
+
+## FindFirstChildOfClass
+
+### Definition
+
+```luau
+function Instance:FindFirstChildOfClass(className: string): Instance?
+```
+
+### Parameters
+
+| Name      | Type   | Description    |
+| --------- | ------ | -------------- |
+| className | string | The class name |
+
+### Returns
+
+| Type      |
+| --------- |
+| Instance? |
+
+### Description
+
+Returns the first child of the specified class, or `nil` if not found.
+
+***
+
+## FindFirstDescendant
+
+### Definition
+
+```luau
+function Instance:FindFirstDescendant(name: string): Instance?
+```
+
+### Parameters
+
+| Name | Type   | Description                |
+| ---- | ------ | -------------------------- |
+| name | string | The name of the descendant |
+
+### Returns
+
+| Type      |
+| --------- |
+| Instance? |
+
+### Description
+
+Returns the first descendant with the specified name, or `nil` if not found.
+
+***
+
+## FindFirstAncestor
+
+### Definition
+
+```luau
+function Instance:FindFirstAncestor(name: string): Instance?
+```
+
+### Parameters
+
+| Name | Type   | Description              |
+| ---- | ------ | ------------------------ |
+| name | string | The name of the ancestor |
+
+### Returns
+
+| Type      |
+| --------- |
+| Instance? |
+
+### Description
+
+Returns the first ancestor with the specified name, or `nil` if not found.
+
+***
+
+## FindFirstAncestorOfClass
+
+### Definition
+
+```luau
+function Instance:FindFirstAncestorOfClass(className: string): Instance?
+```
+
+### Parameters
+
+| Name      | Type   | Description    |
+| --------- | ------ | -------------- |
+| className | string | The class name |
+
+### Returns
+
+| Type      |
+| --------- |
+| Instance? |
+
+### Description
+
+Returns the first ancestor of the specified class, or `nil` if not found.
+
+***
+
+## GetChildren
+
+### Definition
+
+```luau
+function Instance:GetChildren(): { Instance }
+```
+
+### Returns
+
+| Type         |
+| ------------ |
+| { Instance } |
+
+### Description
+
+Returns an array of all direct children of this instance.
+
+***
+
+## GetDescendants
+
+### Definition
+
+```luau
+function Instance:GetDescendants(): { Instance }
+```
+
+### Returns
+
+| Type         |
+| ------------ |
+| { Instance } |
+
+### Description
+
+Returns an array of all descendants of this instance.
+
+***
+
+## WaitForChild
+
+### Definition
+
+```luau
+function Instance:WaitForChild(name: string, timeout: number?): Instance?
+```
+
+### Parameters
+
+| Name    | Type    | Description                       |
+| ------- | ------- | --------------------------------- |
+| name    | string  | The name of the child to wait for |
+| timeout | number? | Optional timeout in seconds       |
+
+### Returns
+
+| Type      |
+| --------- |
+| Instance? |
+
+### Description
+
+Waits for a child with the specified name to be added. Returns the child when found, or `nil` if timeout is reached.
+
+***
+
+## IsAncestorOf
+
+### Definition
+
+```luau
+function Instance:IsAncestorOf(instance: Instance): boolean
+```
+
+### Parameters
+
+| Name     | Type     | Description           |
+| -------- | -------- | --------------------- |
+| instance | Instance | The instance to check |
+
+### Returns
+
+| Type    |
+| ------- |
+| boolean |
+
+### Description
+
+Returns `true` if this instance is an ancestor of the specified instance.
+
+***
+
+## IsDescendantOf
+
+### Definition
+
+```luau
+function Instance:IsDescendantOf(instance: Instance): boolean
+```
+
+### Parameters
+
+| Name     | Type     | Description           |
+| -------- | -------- | --------------------- |
+| instance | Instance | The instance to check |
+
+### Returns
+
+| Type    |
+| ------- |
+| boolean |
+
+### Description
+
+Returns `true` if this instance is a descendant of the specified instance.
+
+***
+
+## Destroy
+
+### Definition
+
+```luau
+function Instance:Destroy(): ()
+```
+
+### Description
+
+Destroys the instance and removes it from the game. All descendants are also destroyed.
+
+***
+
+## Name
+
+### Definition
+
+```luau
+Instance.Name: string
+```
+
+### Description
+
+The name of the instance.
+
+***
+
+## ClassName
+
+### Definition
+
+```luau
+Instance.ClassName: string
+```
+
+### Description
+
+The class name of the instance (read-only).
+
+***
+
+## Parent
+
+### Definition
+
+```luau
+Instance.Parent: Instance?
+```
+
+### Description
+
+The parent instance. Can be set to `nil` or another instance.
+
+***
+
+## Data
+
+### Definition
+
+```luau
+Instance.Data: any
+```
+
+### Description
+
+Custom data storage for the instance.
+
+
+# Model
+
+A container object that groups together parts and other instances.
+
+## PrimaryPart
+
+### Definition
+
+```luau
+Model.PrimaryPart: BasePart?
+```
+
+### Description
+
+The primary part of the model, which serves as the reference point for model operations, or `nil` if no primary part is set (read-only).
+
+
+# Player
+
+Represents a player in the game.
+
+## DisplayName
+
+### Definition
+
+```luau
+Player.DisplayName: string
+```
+
+### Description
+
+The display name of the player (read-only).
+
+***
+
+## UserId
+
+### Definition
+
+```luau
+Player.UserId: number
+```
+
+### Description
+
+The unique user ID of the player (read-only).
+
+***
+
+## Character
+
+### Definition
+
+```luau
+Player.Character: Model?
+```
+
+### Description
+
+The player's character model in the game, or `nil` if the player doesn't have a character (read-only).
+
+***
+
+## Team
+
+### Definition
+
+```luau
+Player.Team: Team?
+```
+
+### Description
+
+The team the player is currently on, or `nil` if not on a team (read-only).
+
+
+# Players
+
+The Players service manages all players in the game.
+
+## LocalPlayer
+
+### Definition
+
+```luau
+Players.LocalPlayer: Player?
+```
+
+### Description
+
+Returns the local player (the player running the script), or `nil` if accessed from the server (read-only).
+
+
+# RunService
+
+
+# UserInputService
+
+Service for handling user input such as mouse and keyboard.
+
+## GetMouseLocation
+
+### Definition
+
+```luau
+function UserInputService:GetMouseLocation(): Vector2
+```
+
+### Returns
+
+| Type    |
+| ------- |
+| Vector2 |
+
+### Description
+
+Returns the current mouse position as a Vector2.
+
+***
+
+## SetMouseLocation
+
+### Definition
+
+```luau
+function UserInputService:SetMouseLocation(x: number, y: number): ()
+```
+
+### Parameters
+
+| Name | Type   | Description      |
+| ---- | ------ | ---------------- |
+| x    | number | The X coordinate |
+| y    | number | The Y coordinate |
+
+### Description
+
+Sets the mouse position to the specified X and Y coordinates.
+
+***
+
+## MouseBehavior
+
+### Definition
+
+```luau
+UserInputService.MouseBehavior: Enum.MouseBehavior
+```
+
+### Description
+
+Controls how the mouse behaves (e.g., locked, default). Can be read and written.
+
+***
+
+## MouseDeltaSensitivity
+
+### Definition
+
+```luau
+UserInputService.MouseDeltaSensitivity: number
+```
+
+### Description
+
+The sensitivity of mouse movement delta. Can be read and written.
+
+***
+
+## MouseIconEnabled
+
+### Definition
+
+```luau
+UserInputService.MouseIconEnabled: boolean
+```
+
+### Description
+
+Determines whether the mouse icon is visible. Can be read and written.
+
+
+# ValueBase
+
+Value objects are instances that store a single value of a specific type.
+
+## Applies To
+
+* BoolValue
+* IntValue
+* NumberValue
+* Vector3Value
+* ObjectValue
+* StringValue
+* CFrameValue
+
+## Value
+
+### Definition
+
+Depends on the ValueBase type:
+
+```luau
+BoolValue.Value: boolean
+IntValue.Value: number
+NumberValue.Value: number
+Vector3Value.Value: Vector3
+ObjectValue.Value: Instance?
+StringValue.Value: string
+CFrameValue.Value: CFrame
+```
+
+### Description
+
+The value stored by this value object. Can be read and written.
+
+
+# Workspace
+
+The Workspace service contains all of the physical objects in the game world.
+
+## CurrentCamera
+
+### Definition
+
+```luau
+workspace.CurrentCamera: Camera?
+```
+
+### Description
+
+The current camera being used for rendering, or `nil` if no camera is set (read-only).
+
+
+# Enumerations
+
+

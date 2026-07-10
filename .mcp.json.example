@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "severe-bridge": {
+      "command": "python",
+      "args": ["C:/path/to/SevereMCP/server.py"],
+      "env": {
+        "PYTHONUNBUFFERED": "1",
+        "SEVERE_WS_HOST": "127.0.0.1",
+        "SEVERE_WS_PORT": "8790"
+      }
+    }
+  }
+}

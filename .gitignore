@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Claude Code local settings (private)
+.claude/
+
+# Diagnostics / scratch
+debug_*
+*.log
+scratchpad/
