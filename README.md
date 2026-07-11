@@ -2,12 +2,10 @@
 
 <img src="assets/severemcp-header.png" width="620" alt="SevereMCP">
 
-**Drive [Severe](https://rsware.store/products/severe-roblox-external-lifetime-win-10--11) — the Roblox external — with an AI agent. Run Luau, inspect the game, read memory, build ESP, all from chat.**
+**Connect [Severe](https://rsware.store/products/severe-roblox-external-lifetime-win-10--11) to any AI/LLM model of your choice.** Run Luau, inspect the game, read memory, and build custom ESPs, aimbots & auto-farms — all from just prompting AI.
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 [![Stars](https://img.shields.io/github/stars/RealSlimShady2000/SevereMCP?style=flat-square&color=yellow)](https://github.com/RealSlimShady2000/SevereMCP/stargazers)
-
-### ⭐ If this saved you time, drop a star — it genuinely helps! ⭐
 
 [![Star this repo](https://img.shields.io/badge/⭐_Star_this_repo-2b3137?style=for-the-badge&logo=github)](https://github.com/RealSlimShady2000/SevereMCP/stargazers)
 &nbsp;
@@ -19,7 +17,7 @@
 
 ## What is this
 
-**SevereMCP** is a [Model Context Protocol](https://modelcontextprotocol.io) server that lets an AI agent (Claude, etc.) control **Severe**'s Luau scripting environment. Ask your agent to run Luau, walk the game tree, list players, read memory, or build ESP — and it does it live in your session, then reads the results back.
+**SevereMCP** is a [Model Context Protocol](https://modelcontextprotocol.io) server that hooks **Severe**'s Luau environment up to any AI you use — Claude, ChatGPT, Gemini, or any MCP client. Ask it to run Luau, walk the game tree, list players, read memory, or build an ESP, and it does it live in your session and reads the results back.
 
 ## How it works
 
@@ -42,7 +40,7 @@ The split (server = WS server, bridge = WS client) is required because Severe ex
 pip install -r requirements.txt
 ```
 
-**2. Register the MCP server** — copy `.mcp.json.example` into your client's MCP config and fix the path to `server.py`:
+**2. Add the MCP server to your AI client** — pick yours below. Most use this JSON block; **replace the path** with your real path to `server.py`:
 
 ```json
 {
@@ -50,13 +48,76 @@ pip install -r requirements.txt
     "severe-bridge": {
       "command": "python",
       "args": ["C:/path/to/SevereMCP/server.py"],
-      "env": { "PYTHONUNBUFFERED": "1", "SEVERE_WS_HOST": "127.0.0.1", "SEVERE_WS_PORT": "8790" }
+      "env": { "SEVERE_WS_HOST": "127.0.0.1", "SEVERE_WS_PORT": "8790" }
     }
   }
 }
 ```
 
-Your client launches `server.py` automatically; it listens on `ws://127.0.0.1:8790`.
+<details>
+<summary><b>Claude Code (CLI)</b></summary>
+
+One command — no file editing:
+
+```sh
+claude mcp add severe-bridge -e SEVERE_WS_HOST=127.0.0.1 -e SEVERE_WS_PORT=8790 -- python C:/path/to/SevereMCP/server.py
+```
+
+Restart Claude Code, then run `claude mcp list` — `severe-bridge` should show connected.
+</details>
+
+<details>
+<summary><b>Claude Desktop</b></summary>
+
+1. **Settings → Developer → Edit Config** (opens `claude_desktop_config.json`).
+2. Paste the JSON block above (merge into `mcpServers` if the file already has some).
+3. Save, then fully quit and reopen Claude Desktop.
+</details>
+
+<details>
+<summary><b>Claude — VS Code / JetBrains extension</b></summary>
+
+It runs on Claude Code, so either:
+- Run the **Claude Code (CLI)** `claude mcp add` command above in a terminal, **or**
+- Drop a `.mcp.json` file (the JSON block) in your project root.
+
+Then reload the window.
+</details>
+
+<details>
+<summary><b>ChatGPT / OpenAI Codex CLI</b></summary>
+
+Edit `~/.codex/config.toml` and add (TOML, not JSON):
+
+```toml
+[mcp_servers.severe-bridge]
+command = "python"
+args = ["C:/path/to/SevereMCP/server.py"]
+env = { SEVERE_WS_HOST = "127.0.0.1", SEVERE_WS_PORT = "8790" }
+```
+
+Restart Codex. (The ChatGPT app's own "connectors" only accept remote URLs — for this local server, use the Codex CLI.)
+</details>
+
+<details>
+<summary><b>Gemini CLI</b></summary>
+
+Add the JSON block to `~/.gemini/settings.json` (create the file if it doesn't exist), then restart `gemini`. Confirm with `/mcp`.
+</details>
+
+<details>
+<summary><b>Antigravity</b></summary>
+
+Open the MCP settings (Settings → **MCP servers → Edit config**, i.e. its `mcp_config.json`), paste the JSON block, save, and reload.
+</details>
+
+<details>
+<summary><b>LM Studio</b></summary>
+
+Right sidebar → **Program** → **Install → Edit `mcp.json`**, paste the JSON block, and save. Enable the server in the chat's integrations panel.
+</details>
+
+> Any other MCP-capable client works too — point it at `python C:/path/to/SevereMCP/server.py` over **stdio**. The server auto-starts and listens on `ws://127.0.0.1:8790` for the bridge.
 
 **3. Load the bridge in Severe** — run Severe, open its **Script** tab, paste the contents of `bridge.lua`, and click **Execute**. You should see:
 
