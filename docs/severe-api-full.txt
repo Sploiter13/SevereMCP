@@ -647,7 +647,7 @@ Clears all local player data. Returns `true` on success.
 ### Definition
 
 ```luau
-function ismenuopened(): boolean
+function is_menu_opened(): boolean
 ```
 
 ### Returns
@@ -803,7 +803,17 @@ function isleftpressed(): boolean
 Returns `true` if left mouse button is held down.
 
 ***
+## getmouseposition
 
+### Definition
+
+```luau
+function getmouseposition(): Vector2
+```
+
+### Returns
+
+it returns current mouse position as a vector 2 from win api unlike uis:GetMouseLocation() which returns the mouse location from the game it self.
 ## isrightpressed
 
 ### Definition
@@ -1760,9 +1770,63 @@ ws.DataReceived:Connect(function(payload, isBinary)
 end)
 ```
 
-
 # Signal
 
+## Constructor <a href="#signal" id="signal"></a>
+
+### new <a href="#new" id="new"></a>
+
+```
+function Signal.new(): Signal
+```
+
+Creates a new `Signal` object.
+
+## Methods <a href="#connect" id="connect"></a>
+
+### connect <a href="#connect" id="connect"></a>
+
+```
+function Signal:connect(callback: (...any) -> ()): Connection
+```
+
+Connects the specified callback function to the signal. The callback will be invoked with any arguments passed to the `Fire` method.
+
+### fire <a href="#fire" id="fire"></a>
+
+```
+function Signal:fire(... any): ()
+```
+
+Fires the signal, invoking all connected callbacks with the provided arguments.
+
+### wait <a href="#wait" id="wait"></a>
+
+```
+function Signal:wait(): (... any)
+```
+
+Waits for the signal to be fired and returns the arguments passed to the `Fire` method.
+
+### once <a href="#once" id="once"></a>
+
+```
+function Signal:once(callback: (...any) -> ()): Connection
+```
+
+Connects the specified callback function to the signal, but only for a single invocation. After the signal is fired and the callback is invoked, the connection is automatically disconnected.
+
+## Classes <a href="#connection" id="connection"></a>
+
+### Connection
+
+#### disconnect <a href="#disconnect" id="disconnect"></a>
+
+```
+function Connection:disconnect(): ()
+```
+
+Disconnects the connection, preventing the associated callback from being invoked when the signal is fired.
 
 # CFrame
 
@@ -3948,7 +4012,7 @@ Retrieves the **Run-Time Type Information** name from the target address. Return
 ***
 
 ### memory.changed
-
+This does not work ATM but will do in the future.
 #### Definition
 
 ```luau
@@ -5302,7 +5366,7 @@ function DrawingImmediate.OutlinedText(position: Vector2, size: number, color: C
 ***
 
 ### Image
-
+This does not work ATM but planned in the future.
 ```luau
 function DrawingImmediate.Image(source: string, position: Vector2, size: Vector2, color: Color3, opacity: number, is_gif: boolean, rounding: number): ()
 ```
@@ -6533,6 +6597,33 @@ Returns the local player (the player running the script), or `nil` if accessed f
 
 # RunService
 
+## Events
+
+You can connect to these events via `:Connect` method, which takes in a callback.
+
+### Render
+Not Perferred to do GetChildren() | GetDescendants()
+The speed of this event matches the render frequency of the overlay. It is not recommended to call memory functions here.
+
+This event is primarily used for [drawingimmediate](https://v-severe.gitbook.io/docs/reference/namespaces/drawing/drawingimmediate "mention").
+
+### PreLocal
+
+### PostLocal
+
+### PreModel
+
+### PostModel
+
+### PreData
+
+### PostData
+
+PreLocal/PostLocal Are good for Main Script logic, Not Perferred to do GetChildren() | GetDescendants() .
+PreModel/PostModel Are made so that They Are excellent at scanning ; GetChildren() | GetDescendants() .
+PreData/PostData Are great for taking Physics snapshots ex: Position, Velocity, CFrame and so on.
+
+the runservice functions are very very great if used correctly and as they are made.
 
 # UserInputService
 
