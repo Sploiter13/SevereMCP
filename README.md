@@ -5,6 +5,7 @@
 **Connect [Severe](https://rsware.store/products/severe-roblox-external-lifetime-win-10--11) to any AI/LLM model of your choice.** Run Luau, inspect the game, read memory, and build custom ESPs, aimbots & auto-farms — all from just prompting AI.
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
+[![CI](https://github.com/RealSlimShady2000/SevereMCP/actions/workflows/ci.yml/badge.svg)](https://github.com/RealSlimShady2000/SevereMCP/actions/workflows/ci.yml)
 [![Stars](https://img.shields.io/github/stars/RealSlimShady2000/SevereMCP?style=flat-square&color=yellow)](https://github.com/RealSlimShady2000/SevereMCP/stargazers)
 
 [![Star this repo](https://img.shields.io/badge/⭐_Star_this_repo-2b3137?style=for-the-badge&logo=github)](https://github.com/RealSlimShady2000/SevereMCP/stargazers)
@@ -119,7 +120,14 @@ Right sidebar → **Program** → **Install → Edit `mcp.json`**, paste the JSO
 
 > Any other MCP-capable client works too — point it at `python C:/path/to/SevereMCP/server.py` over **stdio**. The server auto-starts and listens on `ws://127.0.0.1:8790` for the bridge.
 
-**3. Load the bridge in Severe** — run Severe, open its **Script** tab, paste the contents of `bridge.lua`, and click **Execute**. You should see:
+**3. Load the bridge in Severe** — run Severe, open its **Script** tab, and **Execute** one of:
+
+*Easy mode (recommended)* — one line, always up to date:
+```lua
+loadstring(game:HttpGet("https://raw.githubusercontent.com/RealSlimShady2000/SevereMCP/main/bridge.lua"))()
+```
+
+*Or* paste the full contents of `bridge.lua`. Either way you should see:
 
 ```
 [severe-bridge] starting, target ws://127.0.0.1:8790
@@ -145,6 +153,12 @@ The bridge auto-reconnects every ~2s, so order doesn't matter.
 | `severe_memory_read` / `severe_memory_write` | MEM-style typed read/write at an address or instance+offset |
 | `severe_memory_rtti` | RTTI class name (e.g. `RBX::Workspace`) at an address/instance |
 | `severe_pointer` | Best-effort instance→pointer (probes for an undocumented accessor) |
+| `severe_read_chain` | Follow a pointer chain (`base + offsets → type`) — generalizes memory ESP reads |
+| `severe_memory_scan` | Bounded scan for a value in a memory range (RE) |
+| `severe_fire_remote` | Fire a RemoteEvent/RemoteFunction by path — the core of auto-farms/bots |
+| `severe_call` / `severe_get` / `severe_set` | Call a method / read / write a property by path |
+| `severe_input` | Synthetic keyboard/mouse input (keys, clicks, move, scroll) |
+| `severe_game_info` | PlaceId / GameId / JobId / HWID / ping / player count / local player |
 | `severe_docs` | Search/browse Severe's **full bundled API docs** (`docs/severe-api-full.txt`) |
 
 Anything without a dedicated tool is reachable via `severe_execute` — the full Severe API (Drawing/ESP, input, `add_model_data`, `game:HttpGet`, crypt, camera, …) is documented via `severe_docs`.
@@ -159,6 +173,19 @@ Anything without a dedicated tool is reachable via `severe_execute` — the full
 - `severe_docs` → `{ "query": "add_model_data" }`
 
 **[`examples/esp.lua`](examples/esp.lua)** — a full **memory-read ESP + toggle GUI** an agent built through the MCP, tested live on **[RIOTFALL](https://www.roblox.com/games/7796842481/RIOTFALL)**: it reverse-engineers real player positions from memory (RIOTFALL hides them behind bone-driven rigs + decoy `HumanoidRootPart`s), draws team-colored boxes + names, and wires ESP / team-check toggles into a Severe UI library. Great "what you can build" reference.
+
+<!-- Demo: drop a clip at assets/demo.gif, then:  <p align="center"><img src="assets/demo.gif" width="720" alt="SevereMCP demo"></p> -->
+
+### Prompt recipes
+
+Things you can just *ask* your AI (it explores the game and writes the Luau):
+
+- *"Call `severe_game_info`, then build a box ESP with names for all enemies."*
+- *"Search ReplicatedStorage for remotes, find the one that collects currency, and fire it every 0.5s — stop when my cash stops going up."*
+- *"Walk `game.Workspace` and list every model that looks like an ore/resource node with its position."*
+- *"Read my character's health from memory and auto-press the heal key when it drops below 50."*
+- *"Reverse-engineer this game's real player positions like the RIOTFALL example and make an ESP."*
+- *"Fire the `EquipTool` remote, then auto-click every 200ms to farm."* (`severe_fire_remote` + `severe_input`)
 
 ## Beyond ESP & aimbot — auto-farms and automation
 
@@ -206,7 +233,10 @@ Set in the MCP config `env` block (mirror host/port in `bridge.lua` if you chang
 | `SEVERE_WS_HOST` | `127.0.0.1` | WebSocket bind host (`0.0.0.0` for cross-machine) |
 | `SEVERE_WS_PORT` | `8790` | WebSocket port (also edit `WS_PORT` in `bridge.lua`) |
 | `SEVERE_WORKSPACE` | `C:\v2\workspace` | Sandbox root for file tools |
-| `SEVERE_TIMEOUT` | `15` | Per-command timeout (seconds) |
+| `SEVERE_TIMEOUT` | `15` | Default per-command timeout (`severe_execute` can override per call) |
+| `SEVERE_UNSAFE` | *(off)* | Set to `1` to allow **writes** (`memory_write`, `set`) — off by default (a bad write can crash the game) |
+| `SEVERE_TOKEN` | *(off)* | Shared secret; if set, the bridge's `WS_TOKEN` must match (LAN safety) |
+| `SEVERE_MAX_OUTPUT` | `60000` | Max chars returned to the AI (truncates huge results) |
 
 ## Troubleshooting
 

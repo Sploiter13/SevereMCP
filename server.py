@@ -27,11 +27,18 @@ from mcp.server import Server
 from mcp.server.stdio import stdio_server
 import mcp.types as types
 
+SERVER_VERSION = "1.1.0"
 WS_HOST = os.environ.get("SEVERE_WS_HOST", "127.0.0.1")
 WS_PORT = int(os.environ.get("SEVERE_WS_PORT", "8790"))
 # Sandbox root Severe restricts file ops to. Keep in sync with bridge.lua.
 WORKSPACE_ROOT = os.environ.get("SEVERE_WORKSPACE", r"C:\v2\workspace")
 COMMAND_TIMEOUT = float(os.environ.get("SEVERE_TIMEOUT", "15"))
+# Optional shared secret; if set, the bridge's hello must match it. Empty = off.
+WS_TOKEN = os.environ.get("SEVERE_TOKEN", "")
+# Memory/property WRITES are gated off by default (a bad write can crash the game).
+ALLOW_WRITES = os.environ.get("SEVERE_UNSAFE", "") not in ("", "0", "false", "False")
+# Cap the text returned to the AI client so a huge result can't blow its context.
+MAX_OUTPUT_CHARS = int(os.environ.get("SEVERE_MAX_OUTPUT", "60000"))
 
 # Bundled full Severe API docs, served by the severe_docs tool.
 DOCS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
@@ -63,9 +70,13 @@ class BridgeManager:
             # Severe's WebsocketClient.new() blocks until it receives the FIRST
             # frame from the server (handshake completion alone is not enough),
             # so send a welcome frame immediately to unblock the bridge's new().
-            await websocket.send(json.dumps({"type": "welcome", "server": "severe-bridge"}))
+            await websocket.send(json.dumps(
+                {"type": "welcome", "server": "severe-bridge", "version": SERVER_VERSION}))
             async for raw in websocket:
-                self._on_message(raw)
+                if self._on_message(raw) is False:  # auth rejected
+                    self.connection = None
+                    await websocket.close(code=4001, reason="bad token")
+                    break
         except websockets.ConnectionClosed:
             pass
         finally:
@@ -78,20 +89,25 @@ class BridgeManager:
                     fut.set_exception(RuntimeError("bridge disconnected"))
             self._pending.clear()
 
-    def _on_message(self, raw) -> None:
+    def _on_message(self, raw) -> bool:
+        """Returns False if the connection must be rejected (bad auth token)."""
         try:
             msg = json.loads(raw)
         except (ValueError, TypeError):
-            return
+            return True
         if not isinstance(msg, dict):
-            return
+            return True
         if "hello" in msg:
+            if WS_TOKEN and msg.get("token", "") != WS_TOKEN:
+                self.hello = None
+                return False
             self.hello = msg
-            return
+            return True
         msg_id = msg.get("id")
         fut = self._pending.pop(msg_id, None)
         if fut is not None and not fut.done():
             fut.set_result(msg)
+        return True
 
     async def send_command(self, op: str, args: dict | None = None,
                            timeout: float = COMMAND_TIMEOUT) -> dict:
@@ -182,7 +198,8 @@ TOOLS: list[types.Tool] = [
         inputSchema={
             "type": "object",
             "properties": {
-                "code": {"type": "string", "description": "Luau source to execute."}
+                "code": {"type": "string", "description": "Luau source to execute."},
+                "timeout": {"type": "number", "description": "Seconds to wait for the result (default 15). Raise for long loops/scans."},
             },
             "required": ["code"],
         },
@@ -334,6 +351,115 @@ TOOLS: list[types.Tool] = [
             },
         },
     ),
+    types.Tool(
+        name="severe_fire_remote",
+        description="Fire a RemoteEvent/RemoteFunction by instance path — the core of most "
+                    "auto-farms/bots. Args is a JSON array; use {\"__instance\":\"path\"} for "
+                    "instance args and {\"__vector3\":{\"x\":..,\"y\":..,\"z\":..}} for vectors.",
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "path": {"type": "string", "description": "Remote instance path, e.g. game.ReplicatedStorage.Remotes.Collect"},
+                "args": {"type": "array", "description": "Arguments (primitives, or {__instance}/{__vector3}).", "items": {}},
+                "method": {"type": "string", "description": "FireServer / InvokeServer / Fire / auto (default auto).", "default": "auto"},
+            },
+            "required": ["path"],
+        },
+    ),
+    types.Tool(
+        name="severe_get",
+        description="Read a single property of an instance by path (e.g. Health, CFrame).",
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "path": {"type": "string"},
+                "property": {"type": "string"},
+            },
+            "required": ["path", "property"],
+        },
+    ),
+    types.Tool(
+        name="severe_set",
+        description="Set a single property of an instance by path. (A property WRITE — requires "
+                    "SEVERE_UNSAFE=1, like memory_write.)",
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "path": {"type": "string"},
+                "property": {"type": "string"},
+                "value": {"description": "New value (primitive, or {__instance}/{__vector3})."},
+            },
+            "required": ["path", "property", "value"],
+        },
+    ),
+    types.Tool(
+        name="severe_call",
+        description="Call a method on an instance by path with JSON args (e.g. FindFirstChild, "
+                    "GetChildren). Defensive: reports if the method isn't supported in this build.",
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "path": {"type": "string"},
+                "method": {"type": "string"},
+                "args": {"type": "array", "description": "Arguments (primitives, or {__instance}/{__vector3}).", "items": {}},
+            },
+            "required": ["path", "method"],
+        },
+    ),
+    types.Tool(
+        name="severe_input",
+        description="Send synthetic keyboard/mouse input (automation). Actions: keytap, keydown, "
+                    "keyup (with `key` = name like 'e'/'space'/'f1' or a VK number), mouse1click, "
+                    "mouse2click, mousemove (x,y), mousescroll (amount).",
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "action": {"type": "string", "description": "keytap/keydown/keyup/mouse1click/mouse2click/mousemove/mousescroll"},
+                "key": {"description": "Key name (e.g. 'e', 'space', 'f1') or VK code number."},
+                "x": {"type": "integer"}, "y": {"type": "integer"},
+                "amount": {"type": "integer", "description": "Scroll amount (mousescroll)."},
+            },
+            "required": ["action"],
+        },
+    ),
+    types.Tool(
+        name="severe_game_info",
+        description="Quick context: PlaceId, GameId, JobId, HWID, ping, player count, and the "
+                    "local player. Call this on connect to learn what game you're in.",
+        inputSchema={"type": "object", "properties": {}},
+    ),
+    types.Tool(
+        name="severe_read_chain",
+        description="Follow a pointer chain and read a typed value — generalizes memory ESP reads. "
+                    "`base` is an instance path OR address; `offsets` are dereferenced via readu64 "
+                    "except the last, which is read as `type`. E.g. base=part, offsets=['0x128','0xec'], "
+                    "type='vector' reads its world position.",
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "base": {"type": "string", "description": "Instance path or address (hex/decimal)."},
+                "offsets": {"type": "array", "description": "Offsets (hex strings or ints).", "items": {}},
+                "type": {"type": "string", "description": "i8..f64/vector/string. Default u64.", "default": "u64"},
+            },
+            "required": ["base", "offsets"],
+        },
+    ),
+    types.Tool(
+        name="severe_memory_scan",
+        description="Bounded scan for a numeric value in [address, address+size). Advanced/RE tool — "
+                    "size is capped (256KB) and reads are best-effort. Returns matching addresses.",
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "address": {"type": "string", "description": "Start address (hex/decimal)."},
+                "size": {"type": "integer", "description": "Bytes to scan (default 4096, max 262144)."},
+                "type": {"type": "string", "description": "Value type (default f32).", "default": "f32"},
+                "value": {"type": "number", "description": "Value to find."},
+                "tolerance": {"type": "number", "description": "Match tolerance (default 0)."},
+            },
+            "required": ["address", "value"],
+        },
+    ),
 ]
 
 
@@ -347,9 +473,14 @@ async def call_tool(name: str, arguments: dict) -> list[types.TextContent]:
     arguments = arguments or {}
 
     if name == "severe_status":
+        bridge_ver = (bridge.hello or {}).get("version")
         result = {"connected": bridge.connected, "hello": bridge.hello,
                   "ws": f"ws://{WS_HOST}:{WS_PORT}", "workspace": WORKSPACE_ROOT,
-                  "docs_loaded": bool(SEVERE_DOCS)}
+                  "docs_loaded": bool(SEVERE_DOCS), "server_version": SERVER_VERSION,
+                  "bridge_version": bridge_ver, "writes_enabled": ALLOW_WRITES,
+                  "auth_required": bool(WS_TOKEN)}
+        if bridge_ver and bridge_ver != SERVER_VERSION:
+            result["version_mismatch"] = f"bridge {bridge_ver} != server {SERVER_VERSION} (re-load bridge.lua)"
         return [types.TextContent(type="text", text=json.dumps(result, indent=2))]
 
     if name == "severe_docs":
@@ -357,7 +488,9 @@ async def call_tool(name: str, arguments: dict) -> list[types.TextContent]:
 
     try:
         if name == "severe_execute":
-            result = await bridge.send_command("execute", {"code": arguments["code"]})
+            result = await bridge.send_command(
+                "execute", {"code": arguments["code"]},
+                timeout=float(arguments.get("timeout") or COMMAND_TIMEOUT))
         elif name == "severe_eval":
             result = await bridge.send_command("eval", {"expression": arguments["expression"]})
         elif name == "severe_inspect":
@@ -391,6 +524,9 @@ async def call_tool(name: str, arguments: dict) -> list[types.TextContent]:
                 "address": arguments.get("address"), "path": arguments.get("path"),
                 "offset": arguments.get("offset", 0), "type": arguments.get("type", "u32")})
         elif name == "severe_memory_write":
+            if not ALLOW_WRITES:
+                raise RuntimeError("memory writes are disabled — set SEVERE_UNSAFE=1 in the MCP "
+                                   "config env to enable (a bad write can crash the game)")
             result = await bridge.send_command("memory_write", {
                 "address": arguments.get("address"), "path": arguments.get("path"),
                 "offset": arguments.get("offset", 0), "type": arguments.get("type", "u32"),
@@ -401,6 +537,39 @@ async def call_tool(name: str, arguments: dict) -> list[types.TextContent]:
                 "offset": arguments.get("offset", 0)})
         elif name == "severe_pointer":
             result = await bridge.send_command("pointer", {"path": arguments["path"]})
+        elif name == "severe_fire_remote":
+            result = await bridge.send_command("fire_remote", {
+                "path": arguments["path"], "args": arguments.get("args", []),
+                "method": arguments.get("method", "auto")})
+        elif name == "severe_get":
+            result = await bridge.send_command("get", {
+                "path": arguments["path"], "property": arguments["property"]})
+        elif name == "severe_set":
+            if not ALLOW_WRITES:
+                raise RuntimeError("property writes are disabled — set SEVERE_UNSAFE=1 to enable")
+            result = await bridge.send_command("set", {
+                "path": arguments["path"], "property": arguments["property"],
+                "value": arguments["value"]})
+        elif name == "severe_call":
+            result = await bridge.send_command("call", {
+                "path": arguments["path"], "method": arguments["method"],
+                "args": arguments.get("args", [])})
+        elif name == "severe_input":
+            result = await bridge.send_command("input", {
+                "action": arguments["action"], "key": arguments.get("key"),
+                "x": arguments.get("x"), "y": arguments.get("y"),
+                "amount": arguments.get("amount")})
+        elif name == "severe_game_info":
+            result = await bridge.send_command("game_info", {})
+        elif name == "severe_read_chain":
+            result = await bridge.send_command("read_chain", {
+                "base": arguments["base"], "offsets": arguments["offsets"],
+                "type": arguments.get("type", "u64")})
+        elif name == "severe_memory_scan":
+            result = await bridge.send_command("memory_scan", {
+                "address": arguments["address"], "size": arguments.get("size", 4096),
+                "type": arguments.get("type", "f32"), "value": arguments["value"],
+                "tolerance": arguments.get("tolerance", 0)}, timeout=max(COMMAND_TIMEOUT, 30))
         else:
             raise RuntimeError(f"unknown tool: {name}")
     except Exception as exc:  # surface as a readable tool error
@@ -410,6 +579,9 @@ async def call_tool(name: str, arguments: dict) -> list[types.TextContent]:
         text = result
     else:
         text = json.dumps(result, indent=2, ensure_ascii=False)
+    if len(text) > MAX_OUTPUT_CHARS:
+        text = text[:MAX_OUTPUT_CHARS] + f"\n...[truncated at {MAX_OUTPUT_CHARS} chars; " \
+               "narrow your query or raise SEVERE_MAX_OUTPUT]"
     return [types.TextContent(type="text", text=text)]
 
 

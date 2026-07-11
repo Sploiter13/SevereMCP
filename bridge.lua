@@ -22,6 +22,9 @@ local VERSION = "1.0.0"
 local WS_HOST = "127.0.0.1"
 local WS_PORT = 8790
 local WS_URL = "ws://" .. WS_HOST .. ":" .. WS_PORT
+-- Optional shared secret for cross-machine use. Leave "" for same-machine.
+-- If set, must match the server's SEVERE_TOKEN env var.
+local WS_TOKEN = ""
 
 local MAX_DEPTH = 4        -- serialization depth cap
 local OP_BUDGET = 500000   -- max nodes touched per command (anti-freeze)
@@ -544,6 +547,177 @@ function dispatch.pointer(args)
 end
 
 --==========================================================================--
+-- Automation: remotes, structured get/set/call, synthetic input, game info
+--==========================================================================--
+
+-- Convert a JSON arg to a Lua value. {__instance="path"} -> resolved instance,
+-- {__vector3={x,y,z}} -> Vector3, else the primitive as-is.
+local function to_lua_arg(a)
+  if type(a) == "table" then
+    if a.__instance then return resolve_path(a.__instance) end
+    if a.__vector3 then return Vector3.new(a.__vector3.x, a.__vector3.y, a.__vector3.z) end
+  end
+  return a
+end
+
+local function pack_args(raw)
+  local out = {}
+  raw = raw or {}
+  for i = 1, #raw do out[i] = to_lua_arg(raw[i]) end
+  return out, #raw
+end
+
+local function pack_returns(results)
+  local ret = {}
+  for i = 1, results.n do ret[i] = serialize(results[i], 0) end
+  return ret
+end
+
+function dispatch.fire_remote(args)
+  local remote = resolve_path(args.path)
+  local method = args.method or "auto"
+  if method == "auto" then
+    method = (remote.ClassName == "RemoteFunction") and "InvokeServer" or "FireServer"
+  end
+  local fn = remote[method]
+  if type(fn) ~= "function" then
+    error("method '" .. tostring(method) .. "' not available on " .. tostring(remote.ClassName))
+  end
+  local a, n = pack_args(args.args)
+  local results = table.pack(fn(remote, table.unpack(a, 1, n)))
+  return {ok = true, method = method, returns = pack_returns(results)}
+end
+
+function dispatch.get(args)
+  local inst = resolve_path(args.path)
+  return {path = get_path(inst), property = args.property,
+          value = serialize(inst[args.property], 0)}
+end
+
+function dispatch.set(args)
+  local inst = resolve_path(args.path)
+  inst[args.property] = to_lua_arg(args.value)
+  return {ok = true, path = get_path(inst), property = args.property}
+end
+
+function dispatch.call(args)
+  local inst = resolve_path(args.path)
+  local fn = inst[args.method]
+  if type(fn) ~= "function" then
+    error("method '" .. tostring(args.method) .. "' not available on " .. tostring(inst.ClassName))
+  end
+  local a, n = pack_args(args.args)
+  local results = table.pack(fn(inst, table.unpack(a, 1, n)))
+  return {ok = true, method = args.method, returns = pack_returns(results)}
+end
+
+-- key name -> Windows virtual-key code
+local VK = {space = 0x20, enter = 0x0D, ["return"] = 0x0D, tab = 0x09, shift = 0x10,
+            ctrl = 0x11, control = 0x11, alt = 0x12, esc = 0x1B, escape = 0x1B,
+            backspace = 0x08, delete = 0x2E, left = 0x25, up = 0x26, right = 0x27,
+            down = 0x28, home = 0x24, ["end"] = 0x23}
+for i = 0, 25 do VK[string.char(97 + i)] = 0x41 + i end   -- a-z
+for i = 0, 9 do VK[tostring(i)] = 0x30 + i end            -- 0-9
+for i = 1, 12 do VK["f" .. i] = 0x6F + i end              -- f1-f12
+
+local function keycode(k)
+  if type(k) == "number" then return k end
+  local c = VK[string.lower(tostring(k))]
+  if not c then error("unknown key: " .. tostring(k)) end
+  return c
+end
+
+function dispatch.input(args)
+  local a = args.action
+  if a == "keytap" then
+    local kc = keycode(args.key); keypress(kc); task.wait(); keyrelease(kc)
+  elseif a == "keydown" then keypress(keycode(args.key))
+  elseif a == "keyup" then keyrelease(keycode(args.key))
+  elseif a == "mouse1click" then mouse1click()
+  elseif a == "mouse2click" then mouse2click()
+  elseif a == "mousemove" then mousemoveabs(tonumber(args.x) or 0, tonumber(args.y) or 0)
+  elseif a == "mousescroll" then mousescroll(tonumber(args.amount) or 0)
+  else error("unknown input action: " .. tostring(a)) end
+  return {ok = true, action = a}
+end
+
+function dispatch.game_info()
+  local info = {}
+  pcall(function() info.PlaceId = game.PlaceId end)
+  pcall(function() info.GameId = game.GameId end)
+  pcall(function() info.JobId = game.JobId end)
+  pcall(function() info.Hwid = game:GetHwid() end)
+  pcall(function() info.Ping = game:GetPing() end)
+  local ok, svc = pcall(function() return game:GetService("Players") end)
+  if ok and svc then
+    pcall(function()
+      local lp = svc.LocalPlayer
+      if lp then info.local_player = {Name = lp.Name, DisplayName = lp.DisplayName, UserId = lp.UserId} end
+    end)
+    pcall(function()
+      local n = 0
+      for _, c in ipairs(svc:GetChildren()) do if c.ClassName == "Player" then n = n + 1 end end
+      info.player_count = n
+    end)
+  end
+  return info
+end
+
+-- Follow a pointer chain: deref every offset but the last (readu64), then read
+-- the final offset as `type`. `base` is an instance path OR a numeric address.
+function dispatch.read_chain(args)
+  local ty = tostring(args.type or "u64")
+  if not MEM_TYPES[ty] then error("bad type: " .. ty) end
+  local offsets = args.offsets or {}
+  if #offsets == 0 then error("provide at least one offset") end
+
+  local base = args.base
+  local addr = (type(base) == "number") and base or (type(base) == "string" and tonumber(base) or nil)
+  local cur, is_ud
+  if addr then cur, is_ud = addr, false
+  else cur, is_ud = resolve_path(tostring(base)), true end
+
+  for i = 1, #offsets - 1 do
+    local off = tonumber(offsets[i]) or 0
+    cur = is_ud and memory.readu64(cur, off) or memory.readu64(cur + off)
+    is_ud = false
+    if type(cur) ~= "number" then error("null pointer at offset index " .. i) end
+  end
+
+  local lastOff = tonumber(offsets[#offsets]) or 0
+  local readfn = memory["read" .. ty]
+  local val = is_ud and readfn(cur, lastOff) or readfn(cur + lastOff)
+  return {type = ty, value = serialize(val, 0)}
+end
+
+-- Bounded numeric scan in [address, address+size). ADVANCED: reading unmapped
+-- memory can be unsafe; size is capped and the loop yields.
+function dispatch.memory_scan(args)
+  local ty = tostring(args.type or "f32")
+  if not MEM_TYPES[ty] then error("bad type: " .. ty) end
+  local base = args.address
+  if type(base) == "string" then base = tonumber(base) end
+  if type(base) ~= "number" then error("provide a numeric start address") end
+  local size = math.min(tonumber(args.size) or 0x1000, 0x40000)  -- cap 256KB
+  local target = tonumber(args.value)
+  if not target then error("provide a numeric value to scan for") end
+  local tol = tonumber(args.tolerance) or 0
+  local step = (ty == "f64" or ty == "i64" or ty == "u64") and 8 or 4
+  local readfn = memory["read" .. ty]
+  local hits, n = {}, 0
+  for off = 0, size - step, step do
+    n = n + 1
+    if n % YIELD_EVERY == 0 then task.wait() end
+    local ok, v = pcall(function() return readfn(base + off) end)
+    if ok and type(v) == "number" and math.abs(v - target) <= tol then
+      hits[#hits + 1] = {address = string.format("0x%x", base + off), offset = off, value = v}
+      if #hits >= 100 then break end
+    end
+  end
+  return {scanned = n, count = #hits, hits = hits}
+end
+
+--==========================================================================--
 -- WebSocket client + reconnect loop
 --==========================================================================--
 local socket = nil
@@ -598,7 +772,7 @@ local function connect()
     task.spawn(function() pcall(handle_message, payload) end)
   end)
   pcall(function()
-    socket:Send(json.encode({hello = "severe-bridge", version = VERSION}))
+    socket:Send(json.encode({hello = "severe-bridge", version = VERSION, token = WS_TOKEN}))
   end)
   return true
 end
