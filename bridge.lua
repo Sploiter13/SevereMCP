@@ -697,7 +697,7 @@ end
 -- Bounded numeric scan in [address, address+size). ADVANCED: reading unmapped
 -- memory can be unsafe; size is capped and the loop yields.
 function dispatch.memory_scan(args)
-  local ty = tostring(args.type or "f32")
+  local ty = tostring(args.type or "f32")-- ty is type this got me when i first read this line lol, thank you sirmeme :)
   if not MEM_TYPES[ty] then error("bad type: " .. ty) end
   local base = args.address
   if type(base) == "string" then base = tonumber(base) end
@@ -720,6 +720,27 @@ function dispatch.memory_scan(args)
   end
   return {scanned = n, count = #hits, hits = hits}
 end
+
+ -- okay so i decided to ditch this for later since this will just get more complicated for not a very good reason, also uh i forgot.
+ -- local decodebuff = { u8 = buffer.readu8, i8 = buffer.readi8, u16 = buffer.readu16, i16 = buffer.readi16, u32 = buffer.readu32, i32 = buffer.readi32, f32 = buffer.readf32, f64 = buffer.readf64} --buffer is much better for scanning areas like this ik that it might not be that big of improvement but still yeah good practice.
+  --local decodefunction = decodebuff[ty] 
+  --if not decodefunction then error("types supprted are only u8,u16,u32,f32,f64 and ofc the integer ones aswell not " .. ty) end
+ -- if #hits >= 100 then break end
+   -- end
+  --end
+  --  local how_much_to_read = 0x2000
+   -- local start = 0
+   -- while start < size do
+    --  local want = math.min(how_much_to_read, size - start) -- how much it wants to read like the size of the read/
+    --  local good, buff = pcall(memory.readbuffer, base+ start, want)
+     -- if good and buff ~= nil then
+     --   local bufferlength = buffer.len(buff)
+     --   for offset = 0, bufferlength - step, step do
+        --  n= n+1
+       --   local value1 = decodefunction(buff, offset)
+         -- if math.abs(value1 - target) <= tol then 
+           -- hits[#hits +1] = {address = string.format("0x%x", base +start + offset), offset = start+ offset, value = value1}
+           -- if #hits >=100 then return {scanned = n , count = #hits, hits = hits} end
 
 --==========================================================================--
 -- WebSocket client + reconnect loop
