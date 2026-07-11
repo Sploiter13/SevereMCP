@@ -15,7 +15,7 @@
   readfile/writefile. File ops are sandboxed by Severe to C:\v2\workspace.
 ]]
 
-local VERSION = "1.0.0"
+local VERSION = "1.1.1"
 -- Host where server.py runs. Default localhost = Severe and the MCP server on the
 -- SAME PC. Cross-machine: set this to the server PC's LAN IP (and run server.py with
 -- SEVERE_WS_HOST=0.0.0.0 + open the firewall port). See README "Cross-machine".
@@ -225,16 +225,18 @@ end
 -- Best-effort numeric pointer for an instance (DEX "Pointer:"). No documented
 -- accessor exists, so probe for an undocumented one. Returns address|nil, method.
 local function try_pointer(inst)
-  -- for _, nm in ipairs({"getaddress", "getpointer", "get_address",
-  --                      "get_pointer", "addressof", "pointer_of"}) do
-  --   local f = GLOBALS[nm] or _G[nm]
-  --   if type(f) == "function" then
-  --     local ok, addr = pcall(f, inst)
-  --     if ok and type(addr) == "number" then return addr, nm end
-  --   end
-  -- end
+  -- Instance.Data exposes the raw address on this build (thanks @Sploiter13, #1).
   local ok, addr = pcall(function() return tonumber(inst.Data) end)
   if ok and type(addr) == "number" then return addr, ".Data" end
+  -- Fallback: probe for an undocumented address getter, in case a build differs.
+  for _, nm in ipairs({"getaddress", "getpointer", "get_address",
+                       "get_pointer", "addressof", "pointer_of"}) do
+    local f = GLOBALS[nm] or _G[nm]
+    if type(f) == "function" then
+      local ok2, a = pcall(f, inst)
+      if ok2 and type(a) == "number" then return a, nm end
+    end
+  end
   return nil, nil
 end
 -- i blame mafia for alot of things undocumented bruh

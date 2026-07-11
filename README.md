@@ -152,7 +152,7 @@ The bridge auto-reconnects every ~2s, so order doesn't matter.
 | `severe_file_read` / `severe_file_write` | Read/write files under Severe's workspace |
 | `severe_memory_read` / `severe_memory_write` | MEM-style typed read/write at an address or instance+offset |
 | `severe_memory_rtti` | RTTI class name (e.g. `RBX::Workspace`) at an address/instance |
-| `severe_pointer` | Best-effort instance→pointer (probes for an undocumented accessor) |
+| `severe_pointer` | Instance→pointer (0x..) via Severe's undocumented `Instance.Data` address |
 | `severe_read_chain` | Follow a pointer chain (`base + offsets → type`) — generalizes memory ESP reads |
 | `severe_memory_scan` | Bounded scan for a value in a memory range (RE) |
 | `severe_fire_remote` | Fire a RemoteEvent/RemoteFunction by path — the core of auto-farms/bots |

@@ -27,7 +27,7 @@ from mcp.server import Server
 from mcp.server.stdio import stdio_server
 import mcp.types as types
 
-SERVER_VERSION = "1.1.0"
+SERVER_VERSION = "1.1.1"
 WS_HOST = os.environ.get("SEVERE_WS_HOST", "127.0.0.1")
 WS_PORT = int(os.environ.get("SEVERE_WS_PORT", "8790"))
 # Sandbox root Severe restricts file ops to. Keep in sync with bridge.lua.
@@ -328,9 +328,9 @@ TOOLS: list[types.Tool] = [
     ),
     types.Tool(
         name="severe_pointer",
-        description="DEX explorer: best-effort numeric pointer (0x..) for an instance path. "
-                    "Severe has no documented Instance->address accessor, so this probes for "
-                    "an undocumented one; returns null pointer if unavailable.",
+        description="DEX explorer: numeric pointer (0x..) for an instance path. Uses Severe's "
+                    "undocumented Instance.Data address (with a probe fallback); returns null "
+                    "only if the build exposes no accessor.",
         inputSchema={
             "type": "object",
             "properties": {"path": {"type": "string", "description": "Instance path, e.g. game.Workspace.Foo"}},
